@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "281829387877",
+    "firebase_url": "https://nexclinic-8c126.firebaseio.com",
+    "project_id": "nexclinic-8c126",
+    "storage_bucket": "nexclinic-8c126.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:281829387877:android:fa0254dbd7fec99365208c",
+        "android_client_info": {
+          "package_name": "com.example.doctor_consultation_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "281829387877-ul2fd6fgjthfl4asgoo3f42gvuv0unbj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.doctor_consultation_app",
+            "certificate_hash": "c48e802f05378ac7e1900516ea94626bd0b40d30"
+          }
+        },
+        {
+          "client_id": "281829387877-l5i8ledpge5b0uk6dhjfr09tbltsu80k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN6XQ9sfA4T_I9WC3R3HtKRW0z-39xgo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "281829387877-l5i8ledpge5b0uk6dhjfr09tbltsu80k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
