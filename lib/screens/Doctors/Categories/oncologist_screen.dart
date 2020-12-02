@@ -7,7 +7,7 @@ class OncologistScreen extends StatefulWidget {
 }
 
 class _OncologistScreenState extends State<OncologistScreen> {
- int checkedIndex1 = -1;
+  int checkedIndex1 = -1;
 
   Widget buildOncologistDocCard(int index) {
     bool checked = index == checkedIndex1;
@@ -38,7 +38,8 @@ class _OncologistScreenState extends State<OncologistScreen> {
               //   borderRadius: BorderRadius.circular(12),
               // ),
               child: Padding(
-                padding: const EdgeInsets.only(top: 1, bottom: 1,left: 2,right: 2),
+                padding:
+                    const EdgeInsets.only(top: 1, bottom: 1, left: 2, right: 2),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,18 +110,22 @@ class _OncologistScreenState extends State<OncologistScreen> {
                             ),
                             Text(
                               'Rs: 1500 upwards',
-                              style: TextStyle(fontWeight: FontWeight.w800,color: Colors.blue[800]),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.blue[800]),
                             ),
                           ],
                         ),
-                        ClipRRect(
-                          child: Image.asset(
-                            "assets/images/doctor3.png",
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            // width: double.infinity,
-                            // it cover the 25% of total height
-                            fit: BoxFit.fill,
+                        Expanded(
+                          child: ClipRRect(
+                            child: Image.asset(
+                              "assets/images/doctor3.png",
+                              // height: MediaQuery.of(context).size.height * 0.15,
+                              // width: MediaQuery.of(context).size.width * 0.15,
+                              // width: double.infinity,
+                              // it cover the 25% of total height
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ],
@@ -138,7 +143,8 @@ class _OncologistScreenState extends State<OncologistScreen> {
   @override
   Widget build(BuildContext context) {
     return FadeAnimation(
-         1.2, Scaffold(
+      1.2,
+      Scaffold(
         backgroundColor: Colors.blue[50],
         body: SingleChildScrollView(
           child: Column(

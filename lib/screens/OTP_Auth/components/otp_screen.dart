@@ -1,24 +1,26 @@
-
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/onboarding_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-
 import 'otp_input.dart';
 
 class OTPScreen extends StatefulWidget {
   final String mobileNumber;
-  final String name;
+  final String firstname;
+  final String lastname;
   final String email;
-  final String password;
+  final String address;
+  final String sex;
   OTPScreen({
     Key key,
     @required this.mobileNumber,
-    this.name,
+    this.firstname,
+    this.lastname,
     this.email,
-    this.password,
+    this.address,
+    this.sex
   })  : assert(mobileNumber != null),
         super(key: key);
 
@@ -175,7 +177,7 @@ class _OTPScreenState extends State<OTPScreen> {
         (AuthCredential phoneAuthCredential) {
       _firebaseAuth
           .signInWithCredential(phoneAuthCredential)
-          .then((UserCredential value) {
+          .then((AuthResult value) {
         if (value.user != null) {
           // Handle logged in state
           print(value.user.phoneNumber);
@@ -185,11 +187,14 @@ class _OTPScreenState extends State<OTPScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => OnboardingScreen(
-                  // user: value.user,
-                  // email: widget.email,
-                  // name: widget.name,
-                  // password: widget.password,
-                ),
+                    user: value.user,
+                  email: widget.email,
+                  firstname: widget.firstname,
+                  lastname: widget.lastname,
+                  mobileNumber: widget.mobileNumber,
+                  address: widget.address,
+                  sex: widget.sex,
+                    ),
               ),
               (Route<dynamic> route) => false);
 
@@ -218,7 +223,7 @@ class _OTPScreenState extends State<OTPScreen> {
       });
     };
     final PhoneVerificationFailed verificationFailed =
-        (FirebaseException authException) {
+        (AuthException authException) {
       showToast(authException.message, Colors.red);
       print("aaa");
       setState(() {
@@ -256,7 +261,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
     _firebaseAuth
         .signInWithCredential(_authCredential)
-        .then((UserCredential value) {
+        .then((AuthResult value) {
       if (value.user != null) {
         // Handle loogged in state
         print(value.user.phoneNumber);
@@ -264,11 +269,14 @@ class _OTPScreenState extends State<OTPScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => OnboardingScreen(
-                // user: value.user,
-                // email: widget.email,
-                // name: widget.name,
-                // password: widget.password,
-              ),
+                  user: value.user,
+                  email: widget.email,
+                  firstname: widget.firstname,
+                  lastname: widget.lastname,
+                  mobileNumber: widget.mobileNumber,
+                  address: widget.address,
+                  sex: widget.sex,
+                  ),
             ),
             (Route<dynamic> route) => false);
       } else {

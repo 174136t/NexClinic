@@ -194,149 +194,200 @@ class _SignupScreenState extends State<SignupScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Container(
-              child: CurvedWidget(
-                child: Container(
-                  padding: const EdgeInsets.only(top: 70, left: 50),
-                  width: double.infinity,
-                  height: size.height * 0.3,
-                  decoration: BoxDecoration(gradient: purpleGradient),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      FadeAnimation(
-                        1.4,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold),
+            Stack(
+                          children: [
+    Container(
+  
+                  child: CurvedWidget(
+  
+                    child: Container(
+  
+                      padding: const EdgeInsets.only(top: 50, left: 20),
+  
+                      width: double.infinity,
+  
+                      height: size.height * 0.3,
+  
+                      decoration: BoxDecoration(gradient: purpleGradient),
+  
+                      child: Column(
+  
+                        crossAxisAlignment: CrossAxisAlignment.start,
+  
+                        children: <Widget>[
+  
+                          FadeAnimation(
+  
+                            1.4,
+  
+                            Column(
+  
+                              crossAxisAlignment: CrossAxisAlignment.start,
+  
+                              children: <Widget>[
+  
+                                Text(
+  
+                                  'Sign Up',
+  
+                                  style: TextStyle(
+  
+                                      color: Colors.white,
+  
+                                      fontSize: size.height*0.05,
+  
+                                      fontWeight: FontWeight.bold),
+  
+                                ),
+  
+                                SizedBox(
+  
+                                  height: 5,
+  
+                                ),
+  
+                                Text(
+  
+                                  "Fill these data correctly to begin",
+  
+                                  style: TextStyle(color: Colors.white),
+  
+                                )
+  
+                              ],
+  
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Fill these data correctly to begin",
-                              style: TextStyle(color: Colors.white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            // SizedBox(
-            //   height: 22,
-            // ),
-            FadeAnimation(
-              1.6,
-              Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      firstNameField(),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      lastNameField(),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      emailField(),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      addressField(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        'Select your Gender',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      GenderSelection(
-                        maleText: "Male",
-                        femaleText: "Female",
-                        linearGradient: pinkRedGradient,
-                        selectedGenderIconBackgroundColor: Colors.indigo,
-                        checkIconAlignment: Alignment.centerRight,
-                        selectedGenderCheckIcon: null,
-                        onChanged: (Gender gender) {
-                          print(gender.index);
-                          if (gender.index == 0) {
-                            this.sex = "Male";
-                          } else {
-                            this.sex = "Female";
-                          }
-
-                          print('jbj  $sex');
-                        },
-                        equallyAligned: true,
-                        animationDuration: Duration(milliseconds: 400),
-                        isCircular: true,
-                        isSelectedGenderIconCircular: true,
-                        opacityOfGradient: 0.6,
-                        padding: const EdgeInsets.all(3),
-                        size: 120,
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      FadeAnimation(
-                        1.7,
-                        Container(
-                          height: 45,
-                          width: size.width * 0.5,
-                          decoration: BoxDecoration(
-                            // gradient: redGradient,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30),
-                                bottomLeft: Radius.circular(30),
-                                bottomRight: Radius.circular(30)),
+  
                           ),
-                          child: MaterialButton(
-                            color: Colors.blue[800],
-                            onPressed: () {
-                              print('sex$sex');
-                              if (_formKey.currentState.validate() &&
-                                  sex != null) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PhoneLogin(),
-                                  ),
-                                );
-                              } else if(_formKey.currentState.validate() && sex == null) {
-                                _showSnackBar();
-                              }
-                            },
-                            // color: Color(0xffFC9535),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 30,
+  
+                        ],
+  
+                      ),
+  
+                    ),
+  
+                  ),
+  
+                ),
+                Container(
+              margin: EdgeInsets.only(top: size.height*0.25),
+              child: FadeAnimation(
+                1.6,
+                Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        firstNameField(),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        lastNameField(),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        emailField(),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        addressField(),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Select your Gender',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        GenderSelection(
+                          maleText: "Male",
+                          femaleText: "Female",
+                          linearGradient: pinkRedGradient,
+                          selectedGenderIconBackgroundColor: Colors.indigo,
+                          checkIconAlignment: Alignment.centerRight,
+                          selectedGenderCheckIcon: null,
+                          onChanged: (Gender gender) {
+                            print(gender.index);
+                            if (gender.index == 0) {
+                              this.sex = "Male";
+                            } else {
+                              this.sex = "Female";
+                            }
+
+                            print('jbj  $sex');
+                          },
+                          equallyAligned: true,
+                          animationDuration: Duration(milliseconds: 400),
+                          isCircular: true,
+                          isSelectedGenderIconCircular: true,
+                          opacityOfGradient: 0.6,
+                          padding: const EdgeInsets.all(3),
+                          size: 120,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        FadeAnimation(
+                          1.7,
+                          Container(
+                            height: 45,
+                            width: size.width * 0.5,
+                            decoration: BoxDecoration(
+                              // gradient: redGradient,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                  bottomLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30)),
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'Next',
-                              style: TextStyle(
-                                color: kWhiteColor,
-                                fontSize: 18,
+                            child: MaterialButton(
+                              color: Colors.blue[800],
+                              onPressed: () {
+                                print('sex$sex');
+                                if (_formKey.currentState.validate() &&
+                                    sex != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PhoneLogin(
+                                        firstname: firstnameController.text,
+                                        lastname: lastnameController.text,
+                                        email: emailController.text,
+                                        address: addressController.text,
+                                        sex: sex,
+                                      ),
+                                    ),
+                                  );
+                                } else if(_formKey.currentState.validate() && sex == null) {
+                                  _showSnackBar();
+                                }
+                              },
+                              // color: Color(0xffFC9535),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 30,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                'Next',
+                                style: TextStyle(
+                                  color: kWhiteColor,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  )),
+                        
+                      ],
+                    )),
+              ),
             ),
+],
+            ),
+            // SizedBox(
+            //   height: 22,
+            // ),
+            
             SizedBox(
               height: 15,
             ),
@@ -346,7 +397,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Text("NexClinic V.1.0"),
               ),
-            )
+            ),
+             SizedBox(
+                              height: 5,
+                            ),
           ],
         ),
       ),

@@ -25,14 +25,16 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
             Container(
               child: CurvedWidget(
                 child: Container(
-                  padding: const EdgeInsets.only(top: 70, left: 50),
+                  padding: const EdgeInsets.only(top: 70, left: 20),
                   width: double.infinity,
                   height: size.height * 0.4,
                   decoration: BoxDecoration(gradient: purpleGradient),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height:size.height * 0.05 ,),
+                      SizedBox(
+                        height: size.height * 0.05,
+                      ),
                       FadeAnimation(
                         1.2,
                         Column(
@@ -42,7 +44,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                               'Choose your type',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 40,
+                                  fontSize:size.height*0.05,
                                   fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
@@ -68,7 +70,7 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
               Center(
                 child: Text(
                   'Select your type',
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: size.height*0.03, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -82,44 +84,49 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: (){
-                         Navigator.push(
+                      onTap: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ConsultantRegisterScreen(),
                           ),
                         );
                       },
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: ClipRRect(
-                                child: Image.asset(
-                                  "assets/images/consultant.png",
-                                  height: size.width * 0.3,
-                                  width: size.width * 0.3,
-                                  // width: double.infinity,
-                                  // it cover the 25% of total height
-                                  fit: BoxFit.fill,
+                      child: Container(
+                         width: size.width*0.4,
+                        child: Column(
+                          children: [
+                            Container(
+                              // width: size.width*0.3,
+                              //  height: size.width * 0.3,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ClipRRect(
+                                  child: Image.asset(
+                                    "assets/images/consultant.png",
+                                    height: size.width * 0.3,
+                                    width: size.width * 0.3,
+                                    // width: double.infinity,
+                                    // it cover the 25% of total height
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: size.height * 0.05,
-                          ),
-                          Text(
-                            'I\'m a Consultant',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
-                          ),
-                        ],
+                            SizedBox(
+                              height: size.height * 0.05,
+                            ),
+                            Text(
+                              'I\'m a Consultant',
+                              style: TextStyle(
+                                  fontSize: size.height*0.02, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(width: size.width * 0.1),
@@ -132,37 +139,39 @@ class _UserTypeScreenState extends State<UserTypeScreen> {
                           ),
                         );
                       },
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: ClipRRect(
-                                child: Image.asset(
-                                  "assets/images/patient.png",
-                                  height: size.width * 0.3,
-                                  width: size.width * 0.3,
-                                  // width: double.infinity,
-                                  // it cover the 25% of total height
-                                  fit: BoxFit.fill,
+                      child: Container(
+                        width: size.width*0.4,
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: ClipRRect(
+                                  child: Image.asset(
+                                    "assets/images/patient.png",
+                                    height: size.width * 0.3,
+                                    width: size.width * 0.3,
+                                    // width: double.infinity,
+                                    // it cover the 25% of total height
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            
-                            height: size.height * 0.05,
-                          ),
-                          Text(
-                            'I need a Consultant',
-                            style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.w600),
-                          ),
-                        ],
+                            SizedBox(
+                              height: size.height * 0.05,
+                            ),
+                            Text(
+                              'I need a Consultant',
+                              style: TextStyle(
+                                  fontSize: size.height*0.02, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],

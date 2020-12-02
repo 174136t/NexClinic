@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/consultant_home_screen.dart';
+import 'package:doctor_consultation_app/screens/home_screen.dart';
 import 'package:doctor_consultation_app/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -55,16 +59,16 @@ Widget text() {
 
 
 class _SplashScreenState extends State<SplashScreen> {
-  // String email;
-  // String password;
-  // String token;
-  // int id;
-  // String userType;
+ final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  /// NEW CODE.
+  FirebaseUser user;
+  String uid;
+  String type;
   @override
   void initState() {
     super.initState();
+    getCurrentUser();
+    _getUserName();
 
     /// Initialize data, then navigator to Home screen.
     initData().then((value) {
@@ -72,8 +76,30 @@ class _SplashScreenState extends State<SplashScreen> {
       // print(token);
       navigateToHomeScreen();
     });
-  
   }
+
+  void getCurrentUser() async {
+    FirebaseUser _user = await _firebaseAuth.currentUser();
+    setState(() {
+      user = _user;
+      uid = _user.uid;
+    });
+  }
+
+  Future<void> _getUserName() async {
+    Firestore.instance
+        .collection('users')
+        .document((await FirebaseAuth.instance.currentUser()).uid)
+        .get()
+        .then((value) {
+      // setState(() {
+        print(value.data['usertype']);
+        type = value.data['usertype'];
+        // _userName = value.data['UserName'].toString();
+      // });
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -120,8 +146,13 @@ class _SplashScreenState extends State<SplashScreen> {
     print('in nav');
     // print(token);
     // if (token != null && userType == "Developer") {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
-     
+     user == null
+        ? Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginScreen()))
+        :(type == 'patient')? Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomeScreen())):
+            Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => ConsultantHomeScreen()))
+            ;
   }
 }

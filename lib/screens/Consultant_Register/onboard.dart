@@ -1,37 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/constant.dart';
-import 'package:doctor_consultation_app/screens/home_screen.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/consultant_home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../constant.dart';
-import '../constant.dart';
-
-class OnboardingScreen extends StatefulWidget {
-  final FirebaseUser user;
+class OnboardScreen extends StatefulWidget {
   final String mobileNumber;
   final String firstname;
   final String lastname;
   final String email;
   final String address;
-  final String sex;
+  final String nic;
+  final String speciality;
 
-  const OnboardingScreen(
+  const OnboardScreen(
       {Key key,
-      this.user,
       this.mobileNumber,
       this.firstname,
       this.lastname,
       this.email,
       this.address,
-      this.sex})
+      this.nic,
+      this.speciality})
       : super(key: key);
   @override
-  _OnboardingScreenState createState() => _OnboardingScreenState();
+  _OnboardScreenState createState() => _OnboardScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardScreenState extends State<OnboardScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void _register() async {
@@ -42,7 +39,46 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ));
       // .user;
       if (user != null) {
-        print('user adding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        print('doctor adding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        await Firestore.instance
+            .collection('doctors')
+            .document(user.uid)
+            .setData({
+          'firstname': widget.firstname,
+          'lastname': widget.lastname,
+          'email': widget.email,
+          'address': widget.address,
+          'nic': widget.nic,
+          'phone': widget.mobileNumber,
+          'speciality': widget.speciality,
+          'usertype': "doctor",
+        });
+        print("${widget.firstname}");
+        print('doctor added!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        // showWarningDialog(context);
+        // setState(() {
+        //   _success = true;
+        //   _userEmail = user.email;
+        // });
+      }
+    } catch (ex) {
+      print(ex);
+      // showErrorDialog(context);
+      // setState(() {
+      //   _success = true;
+      // });
+    }
+  }
+
+  void _register1() async {
+    try {
+      final FirebaseUser user = (await _auth.currentUser(
+          // email: widget.email,
+          // password: '',
+          ));
+      // .user;
+      if (user != null) {
+        print('doctor adding!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         await Firestore.instance
             .collection('users')
             .document(user.uid)
@@ -51,12 +87,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'lastname': widget.lastname,
           'email': widget.email,
           'address': widget.address,
-          'gender': widget.sex,
+          'nic': widget.nic,
           'phone': widget.mobileNumber,
-          'usertype': "patient",
+          'speciality': widget.speciality,
+          'usertype': "doctor",
         });
         print("${widget.firstname}");
-        print('user added!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+        print('doctor added!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         // showWarningDialog(context);
         // setState(() {
         //   _success = true;
@@ -81,7 +118,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
-          child: Scaffold(
+      child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
             height: size.height,
@@ -133,18 +170,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Choose The Consultation\nYou Want',
+                                  'Allocate & do Consultations\nAs You Want',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 32,
+                                    fontSize: size.height * 0.035,
                                     color: kBackgroundColor,
                                   ),
                                 ),
                                 SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 Text(
-                                  'Find out the best consultants,\nas your desire',
+                                  'Treat patients & serve the country',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: kBackgroundColor.withOpacity(0.7),
@@ -168,10 +205,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           child: MaterialButton(
                             onPressed: () {
                               _register();
+                              _register1();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
+                                  builder: (context) => ConsultantHomeScreen(),
                                 ),
                               );
                             },

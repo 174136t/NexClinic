@@ -5,10 +5,13 @@ import 'package:doctor_consultation_app/screens/OTP_Auth/components/otp_screen.d
 import 'package:flutter/material.dart';
 
 class PhoneLogin extends StatefulWidget {
-  final String name;
+  final String firstname;
+  final String lastname;
   final String email;
-  final String password;
-  PhoneLogin({Key key, this.name, this.email, this.password}) : super(key: key);
+  final String address;
+  final String sex;
+  PhoneLogin({Key key, this.firstname, this.lastname, this.email, this.address, this.sex})
+      : super(key: key);
 
   @override
   _PhoneLoginState createState() => _PhoneLoginState();
@@ -71,42 +74,44 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                           FadeAnimation(
-                        1.4,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'One more step',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.bold),
+                          FadeAnimation(
+                            1.4,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'One more step',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  "Click the below button to \nverify your phone number",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "Click the below button to \nverify your phone number",
-                              style: TextStyle(color: Colors.white,fontSize: 20),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: size.height*0.1,),
-                       FadeAnimation(
-
-                        1.5,
-                        ClipRRect(
-                          child: Image.asset(
-                            "assets/images/down.png",
-                            height: size.height * 0.3,
-                            // width: double.infinity,
-                            // it cover the 25% of total height
-                            fit: BoxFit.fill,
                           ),
-                        ),
-                      ),
+                          SizedBox(
+                            height: size.height * 0.1,
+                          ),
+                          FadeAnimation(
+                            1.5,
+                            ClipRRect(
+                              child: Image.asset(
+                                "assets/images/down.png",
+                                height: size.height * 0.3,
+                                // width: double.infinity,
+                                // it cover the 25% of total height
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -115,7 +120,8 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
               ),
             ),
             FadeAnimation(
-                          1.8, Container(
+              1.8,
+              Container(
                 //color: Colors.black,
                 width: MediaQuery.of(context).size.width * 0.6,
                 //padding: EdgeInsets.only(left: 8.0, top: 30),
@@ -129,7 +135,6 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                     color: Colors.blue[800],
                     onPressed: () => {},
                     child: new Container(
-                      
                       child: new Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -147,11 +152,11 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                           (BuildContext context,
                                               StateSetter state) {
                                         return Container(
-                                         
                                           padding: EdgeInsets.all(16),
-                                          height:
-                                              MediaQuery.of(context).size.height *
-                                                  0.7,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.7,
                                           child: new Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
@@ -169,7 +174,8 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                 'Verify & continue to choose your consultant',
                                                 style: TextStyle(
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.normal,
+                                                    fontWeight:
+                                                        FontWeight.normal,
                                                     color: Colors.black),
                                               ),
                                               Padding(
@@ -188,7 +194,10 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                     hintText: '760123456',
                                                     labelText:
                                                         "9 digit mobile number",
-                                                        labelStyle: TextStyle(fontSize: 18,fontWeight: FontWeight.w800),
+                                                    labelStyle: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w800),
                                                     prefix: Container(
                                                       padding:
                                                           EdgeInsets.all(4.0),
@@ -197,11 +206,11 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontWeight:
-                                                                FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                     ),
                                                   ),
-                                                  
                                                   autovalidate: true,
                                                   autocorrect: false,
                                                   maxLengthEnforced: true,
@@ -216,10 +225,11 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                 padding: EdgeInsets.all(16),
                                                 child: Center(
                                                   child: SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.85,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            0.85,
                                                     child: RaisedButton(
                                                       color: !isValid
                                                           ? Theme.of(context)
@@ -241,7 +251,8 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                             color: Colors.white,
                                                             fontSize: 18.0,
                                                             fontWeight:
-                                                                FontWeight.bold),
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                       onPressed: () {
                                                         if (isValid) {
@@ -256,10 +267,12 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                                           .text,
                                                                   email: widget
                                                                       .email,
-                                                                  name:
-                                                                      widget.name,
-                                                                  password: widget
-                                                                      .password,
+                                                                  firstname: widget
+                                                                      .firstname,
+                                                                      lastname: widget.lastname,
+                                                                      sex: widget.sex,
+                                                                  address: widget
+                                                                      .address,
                                                                 ),
                                                               ));
                                                         } else {

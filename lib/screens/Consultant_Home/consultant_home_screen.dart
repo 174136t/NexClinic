@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Agora/index.dart';
 import 'package:doctor_consultation_app/screens/Consultant_profile/proofile_update_screen.dart';
+import 'package:doctor_consultation_app/screens/login_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,8 +20,9 @@ class ConsultantHomeScreen extends StatefulWidget {
 class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
   @override
   final ScrollController _homeController = ScrollController();
-  String dropdownValueCity = 'Class-Seven';
+  // String dropdownValueCity = 'Class-Seven';
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   int currentIndex;
   @override
   void initState() {
@@ -32,428 +38,577 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
     });
   }
 
+  Future<bool> _onWillPop() {
+    // DateTime now = DateTime.now();
+
+    return showDialog(
+      context: context,
+      builder: (context) => new Theme(
+        data: Theme.of(context).copyWith(
+            dialogBackgroundColor: Colors.grey[100],
+            backgroundColor: Colors.white),
+        child: AlertDialog(
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.only(
+                  topRight: Radius.circular(35),
+                  bottomLeft: Radius.circular(35))),
+          title: new Text('Are you sure?'),
+          content: new Text('Do you want to exit from this App?'),
+          actions: <Widget>[
+            new FlatButton(
+              color: Colors.red[600],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                // side: BorderSide(color: Colors.indigo)
+              ),
+              onPressed: () => exit(0),
+              child: new Text('Yes'),
+            ),
+            new FlatButton(
+              color: Colors.red[400],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                //side: BorderSide(color: Colors.indigo)
+              ),
+              onPressed: () => Navigator.of(context).pop(false),
+              child: new Text('No'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _signOut() async {
+    await _auth.signOut();
+  }
+
+  _showWarningDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => new Theme(
+        data: Theme.of(context).copyWith(
+            dialogBackgroundColor: Colors.grey[100],
+            backgroundColor: Colors.white),
+        child: AlertDialog(
+          elevation: 5.0,
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.only(
+                  topRight: Radius.circular(35),
+                  bottomLeft: Radius.circular(35))),
+          title: new Text(
+            'Are you sure?',
+            // style: TextStyle(color: Colors.white),
+          ),
+          content: new Text(
+            'Do you want to log out from this App?',
+            // style: TextStyle(color: Colors.white),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              color: Colors.red[600],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                // side: BorderSide(color: Colors.indigo)
+              ),
+              onPressed: () {
+                _signOut().whenComplete(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  );
+                });
+              },
+              child: new Text('Yes'),
+            ),
+            new FlatButton(
+              color: Colors.red[400],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                //side: BorderSide(color: Colors.indigo)
+              ),
+              onPressed: () => Navigator.of(context).pop(false),
+              child: new Text('No'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      drawer: Drawer(
-              child: Container(
-            color: Colors.grey[100],
-            child: ListView(
-              children: <Widget>[
-                /* AppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Choose'),
-            ),*/
-                // new UserAccountsDrawerHeader(
-                //   decoration: BoxDecoration(
-                //     color: Colors.indigo[400],
-                //   ),
-                //   accountName: new Text(' home page'),
-                //   accountEmail: new Text('Respect Cabs'),
-                //   currentAccountPicture: CircleAvatar(
-                //     backgroundColor: Colors.white,
-                //     backgroundImage:
-                //         new ExactAssetImage("assets/images/ab.png"),
-                //     minRadius: 30,
-                //     maxRadius: 60,
-                //   ),
-                // ),
-                ListTile(
-                  leading: Icon(Icons.person, color: Colors.indigo[400]),
-                  title: Text('Video Consultation'),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => IndexPage()));
-                  },
-                ),
-                // ListTile(
-                //   leading: Icon(Icons.history, color: Colors.indigo[400]),
-                //   title: Text('Trip History'),
-                //   onTap: () {
-                //     Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => TripHistory(uid: uid)));
-                //   },
-                // ),
-                // ListTile(
-                //   leading: Icon(Icons.notifications, color: Colors.indigo[400]),
-                //   title: Text('Notifications'),
-                //   onTap: () {},
-                // ),
-                // ListTile(
-                //   leading: Icon(Icons.help, color: Colors.indigo[400]),
-                //   title: Text('Help'),
-                //   onTap: () {
-                //     print(widget.user.phoneNumber);
-                //   },
-                // ),
-                // ListTile(
-                //   leading: Icon(Icons.info, color: Colors.indigo[400]),
-                //   title: Text('About us'),
-                //   onTap: () {
-                //     // Navigator.push(
-                //     //     context,
-                //     //     MaterialPageRoute(
-                //     //         builder: (context) => AboutUsScreen()));
-                //   },
-                // ),
-                // ListTile(
-                //     leading: Icon(Icons.exit_to_app, color: Colors.indigo[400]),
-                //     title: Text('Log out'),
-                //     onTap: () {
-                //       _showWarningDialog(context);
-                //     }),
-              ],
-            ),
-          )
-          ),
-      key: _drawerKey,
-      // appBar: AppBar(
-      //   iconTheme: new IconThemeData(color: AppTheme.primaryColor),
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   actions: [
-      //     Container(
-      //       margin: EdgeInsets.only(
-      //         right: 20,
-      //       ),
-
-      //     ),
-      //   ],
-      // ),
-      body: SingleChildScrollView(
-        controller: _homeController,
-        child: Container(
-          height: size.height,
-          alignment: Alignment.center,
-          child: Stack(
-            children: [
-              // Image.asset(
-              //   "assets/images/Guest_Screen.png",
-              //   height: size.height,
-              //   width: size.width,
-              //   fit: BoxFit.fill,
-              // ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: size.height * 0.01,
-                  ),
-                  Container(
-                   
-                    height: size.height * 0.1,
-                    decoration: BoxDecoration(
-                      gradient: purpleGradient,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            
-                            onTap: () {
-                              _drawerKey.currentState.openDrawer();
-                            },
-                            child: Container(
-                               margin: EdgeInsets.only(left: 16),
-                              child: SvgPicture.asset(
-                                'assets/icons/menu.svg',
-                                color: Colors.white,
-                                
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: size.width * 0.55),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(right: 5, top: 20),
-                            child: Text(
-                              'Dr.Manoj',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              // AppRoutes.goto(context, MyProfile());
-                            },
-                            child: Container(
-                                margin: EdgeInsets.only(
-                                    right: 5, top: 20, bottom: 2),
-                                width: size.width * 0.10,
-                                height: size.width * 0.10,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(50))),
-                                child: Center(
-                                    child: Icon(
-                                  Icons.person,
-                                  color: Colors.blue,
-                                  size: 30,
-                                ))),
-                          ),
-                          // Image.asset(
-                          //   Assets.avtar,
-                          //   width: 30,
-                          //   height: 30,
-                          //   fit: BoxFit.contain,
-                          // ),
-                        ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: SafeArea(
+        child: FadeAnimation(
+          1.1,
+          Scaffold(
+            key: _drawerKey,
+            drawer: Drawer(
+                child: Container(
+              decoration: BoxDecoration(
+                gradient: purpleGradient2,
+              ),
+              child: ListView(
+                children: <Widget>[
+                  /* AppBar(
+                    automaticallyImplyLeading: false,
+                    title: Text('Choose'),
+                  ),*/
+                  // new UserAccountsDrawerHeader(
+                  //   decoration: BoxDecoration(
+                  //     color: Colors.indigo[400],
+                  //   ),
+                  //   accountName: new Text(' home page'),
+                  //   accountEmail: new Text('Respect Cabs'),
+                  //   currentAccountPicture: CircleAvatar(
+                  //     backgroundColor: Colors.white,
+                  //     backgroundImage:
+                  //         new ExactAssetImage("assets/images/ab.png"),
+                  //     minRadius: 30,
+                  //     maxRadius: 60,
+                  //   ),
+                  // ),
+                  FadeAnimation(
+                    1.2,
+                    new UserAccountsDrawerHeader(
+                      decoration: BoxDecoration(color: Colors.transparent),
+                      accountName: new Text('Maoj Randeniya'),
+                      accountEmail: new Text('manoj.randeniya@nexeyo.com'),
+                      currentAccountPicture: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage:
+                            new ExactAssetImage("assets/images/dooct.png"),
+                        minRadius: 30,
+                        maxRadius: 60,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: size.height * 0.01,
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.blue[700],
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    margin: EdgeInsets.symmetric(
-                      horizontal: size.width * 0.08,
-                    ),
-                    child: Container(
-                      width: size.width,
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.sentiment_very_dissatisfied,
-                            color: Colors.lightBlueAccent,
-                          ),
-                          Text(
-                            'Your Profile is not completed yet',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 16,
-                              color: Colors.lightBlue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: size.height * 0.005,
-                          ),
-                          // Text(
-                          //   'give a test to see progress',
-                          //   textAlign: TextAlign.center,
-                          //   style: AppTheme.textStyle.heading1.copyWith(
-                          //       color: Colors.white,
-                          //       fontSize: AppFontSize.s20,
-                          //       fontWeight: FontWeight.w900),
-                          // ),
-                          Text(
-                            'Update your Profile to begin',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 20,
-                              color: const Color(0xffffffff),
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                          SizedBox(
-                            height: size.height * 0.005,
-                          ),
-                        ],
-                      ),
+                  FadeAnimation(
+                    1.3,
+                    Divider(
+                      color: Colors.white,
                     ),
                   ),
-                  SizedBox(
-                    height: size.height * 0.03,
-                  ),
-                  slider(),
-                  SizedBox(
-                    height: size.height * 0.01,
-                  ),
-                  Center(
-                    child: Container(
-                      // height: 200,
-                      width: size.width * 0.95,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey,
-                            offset: Offset(0.0, 1.0), //(x,y)
-                            blurRadius: 6.0,
-                          ),
-                        ],
+                  FadeAnimation(
+                    1.4,
+                    ListTile(
+                      leading: Icon(Icons.video_call, color: Colors.white),
+                      title: Text(
+                        'Video Consultation',
+                        style: TextStyle(color: Colors.white),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              'Update Your Profile!!!',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 25),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'Use the below button or go to your profile tab to finsh your profile update',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Colors.grey),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.05,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfileUpdateScreen(),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 200,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                    gradient: new LinearGradient(
-                                        colors: [
-                                          const Color(0xFF3366FF),
-                                          Colors.deepPurple,
-                                        ],
-                                        begin: const FractionalOffset(0.0, 0.0),
-                                        end: const FractionalOffset(1.0, 0.0),
-                                        stops: [0.0, 1.0],
-                                        tileMode: TileMode.clamp),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                      child: Text(
-                                    'Update Profile',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22),
-                                  )),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: size.height * 0.03,
-                            )
-                          ],
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => IndexPage()));
+                      },
+                    ),
+                  ),
+                  // ListTile(
+                  //   leading: Icon(Icons.history, color: Colors.indigo[400]),
+                  //   title: Text('Trip History'),
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => TripHistory(uid: uid)));
+                  //   },
+                  // ),
+                  // ListTile(
+                  //   leading: Icon(Icons.notifications, color: Colors.indigo[400]),
+                  //   title: Text('Notifications'),
+                  //   onTap: () {},
+                  // ),
+                  // ListTile(
+                  //   leading: Icon(Icons.help, color: Colors.indigo[400]),
+                  //   title: Text('Help'),
+                  //   onTap: () {
+                  //     print(widget.user.phoneNumber);
+                  //   },
+                  // ),
+                  // ListTile(
+                  //   leading: Icon(Icons.info, color: Colors.indigo[400]),
+                  //   title: Text('About us'),
+                  //   onTap: () {
+                  //     // Navigator.push(
+                  //     //     context,
+                  //     //     MaterialPageRoute(
+                  //     //         builder: (context) => AboutUsScreen()));
+                  //   },
+                  // ),
+                  FadeAnimation(
+                    1.4,
+                    ListTile(
+                        leading: Icon(Icons.exit_to_app, color: Colors.white),
+                        title: Text(
+                          'Log out',
+                          style: TextStyle(color: Colors.white),
                         ),
-                      ),
-                    ),
-                  )
+                        onTap: () {
+                          _showWarningDialog(context);
+                        }),
+                  ),
                 ],
               ),
-            ],
+            )),
+            // key: _drawerKey,
+            // appBar: AppBar(
+            //   iconTheme: new IconThemeData(color: AppTheme.primaryColor),
+            //   elevation: 0,
+            //   backgroundColor: Colors.transparent,
+            //   actions: [
+            //     Container(
+            //       margin: EdgeInsets.only(
+            //         right: 20,
+            //       ),
+
+            //     ),
+            //   ],
+            // ),
+            body: SingleChildScrollView(
+              controller: _homeController,
+              child: Container(
+                height: size.height,
+                alignment: Alignment.center,
+                child: Stack(
+                  children: [
+                    // Image.asset(
+                    //   "assets/images/Guest_Screen.png",
+                    //   height: size.height,
+                    //   width: size.width,
+                    //   fit: BoxFit.fill,
+                    // ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // SizedBox(
+                        //   height: size.height * 0.01,
+                        // ),
+                        Container(
+                          height: size.height * 0.1,
+                          decoration: BoxDecoration(
+                            gradient: purpleGradient,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    _drawerKey.currentState.openDrawer();
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 16),
+                                    child: SvgPicture.asset(
+                                      'assets/icons/menu.svg',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin:
+                                      EdgeInsets.only(right: size.width * 0.55),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(right: 5, top: 20),
+                                  child: Text(
+                                    'Dr.Manoj',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    // AppRoutes.goto(context, MyProfile());
+                                  },
+                                  child: Container(
+                                      margin: EdgeInsets.only(
+                                          right: 5, top: 20, bottom: 2),
+                                      width: size.width * 0.10,
+                                      height: size.width * 0.10,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(50))),
+                                      child: Center(
+                                          child: Icon(
+                                        Icons.person,
+                                        color: Colors.blue,
+                                        size: 30,
+                                      ))),
+                                ),
+                                // Image.asset(
+                                //   Assets.avtar,
+                                //   width: 30,
+                                //   height: 30,
+                                //   fit: BoxFit.contain,
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.blue[700],
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          margin: EdgeInsets.symmetric(
+                            horizontal: size.width * 0.08,
+                          ),
+                          child: Container(
+                            width: size.width,
+                            padding: EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.sentiment_very_dissatisfied,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                Text(
+                                  'Your Profile is not completed yet',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 16,
+                                    color: Colors.lightBlue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(
+                                  height: size.height * 0.005,
+                                ),
+                                // Text(
+                                //   'give a test to see progress',
+                                //   textAlign: TextAlign.center,
+                                //   style: AppTheme.textStyle.heading1.copyWith(
+                                //       color: Colors.white,
+                                //       fontSize: AppFontSize.s20,
+                                //       fontWeight: FontWeight.w900),
+                                // ),
+                                Text(
+                                  'Update your Profile to begin',
+                                  style: TextStyle(
+                                    fontFamily: 'Poppins',
+                                    fontSize: 20,
+                                    color: const Color(0xffffffff),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                                SizedBox(
+                                  height: size.height * 0.005,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.03,
+                        ),
+                        slider(),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        Center(
+                          child: Container(
+                            // height: 200,
+                            width: size.width * 0.95,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(0.0, 1.0), //(x,y)
+                                  blurRadius: 6.0,
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Update Your Profile!!!',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 25),
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  Text(
+                                    'Use the below button or go to your profile tab to finsh your profile update',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color: Colors.grey),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.05,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ProfileUpdateScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey,
+                                              offset: Offset(0.0, 1.0), //(x,y)
+                                              blurRadius: 6.0,
+                                            ),
+                                          ],
+                                          gradient: new LinearGradient(
+                                              colors: [
+                                                const Color(0xFF3366FF),
+                                                Colors.deepPurple,
+                                              ],
+                                              begin: const FractionalOffset(
+                                                  0.0, 0.0),
+                                              end: const FractionalOffset(
+                                                  1.0, 0.0),
+                                              stops: [0.0, 1.0],
+                                              tileMode: TileMode.clamp),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                            child: Text(
+                                          'Update Profile',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22),
+                                        )),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: size.height * 0.03,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {},
+              child: Icon(Icons.add),
+              backgroundColor: Colors.red,
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.endDocked,
+            bottomNavigationBar: BubbleBottomBar(
+              backgroundColor: Colors.blue[100],
+              hasNotch: true,
+              fabLocation: BubbleBottomBarFabLocation.end,
+              opacity: 0.9,
+              currentIndex: currentIndex,
+              onTap: changePage,
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(
+                      16)), //border radius doesn't work when the notch is enabled.
+              elevation: 5,
+              items: <BubbleBottomBarItem>[
+                BubbleBottomBarItem(
+                    backgroundColor: kCategoryTextColor,
+                    icon: Icon(
+                      CupertinoIcons.home,
+                      color: Colors.black,
+                    ),
+                    activeIcon: Icon(
+                      CupertinoIcons.home,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      "Home",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                BubbleBottomBarItem(
+                    backgroundColor: Colors.deepPurple,
+                    icon: Icon(
+                      Icons.person_pin,
+                      color: Colors.black,
+                    ),
+                    activeIcon: Icon(
+                      Icons.person_pin,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      "Doctors",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                BubbleBottomBarItem(
+                    backgroundColor: Colors.indigo,
+                    icon: Icon(
+                      Icons.notification_important,
+                      color: Colors.black,
+                    ),
+                    activeIcon: Icon(
+                      Icons.notification_important,
+                      color: Colors.white,
+                    ),
+                    title: Text(
+                      "Notifications",
+                      style: TextStyle(color: Colors.white),
+                    )),
+                // BubbleBottomBarItem(
+                //     backgroundColor: Colors.green,
+                //     icon: Icon(
+                //       Icons.menu,
+                //       color: Colors.black,
+                //     ),
+                //     activeIcon: Icon(
+                //       Icons.menu,
+                //       color: Colors.green,
+                //     ),
+                //     title: Text("Menu"))
+              ],
+            ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-        backgroundColor: Colors.red,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      bottomNavigationBar: BubbleBottomBar(
-        backgroundColor: Colors.blue[100],
-        hasNotch: true,
-        fabLocation: BubbleBottomBarFabLocation.end,
-        opacity: 0.9,
-        currentIndex: currentIndex,
-        onTap: changePage,
-        borderRadius: BorderRadius.vertical(
-            top: Radius.circular(
-                16)), //border radius doesn't work when the notch is enabled.
-        elevation: 5,
-        items: <BubbleBottomBarItem>[
-          BubbleBottomBarItem(
-              backgroundColor: kCategoryTextColor,
-              icon: Icon(
-                CupertinoIcons.home,
-                color: Colors.black,
-              ),
-              activeIcon: Icon(
-                CupertinoIcons.home,
-                color: Colors.white,
-              ),
-              title: Text(
-                "Home",
-                style: TextStyle(color: Colors.white),
-              )),
-          BubbleBottomBarItem(
-              backgroundColor: Colors.deepPurple,
-              icon: Icon(
-                Icons.person_pin,
-                color: Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.person_pin,
-                color: Colors.white,
-              ),
-              title: Text(
-                "Doctors",
-                style: TextStyle(color: Colors.white),
-              )),
-          BubbleBottomBarItem(
-              backgroundColor: Colors.indigo,
-              icon: Icon(
-                Icons.notification_important,
-                color: Colors.black,
-              ),
-              activeIcon: Icon(
-                Icons.notification_important,
-                color: Colors.white,
-              ),
-              title: Text(
-                "Notifications",
-                style: TextStyle(color: Colors.white),
-              )),
-          // BubbleBottomBarItem(
-          //     backgroundColor: Colors.green,
-          //     icon: Icon(
-          //       Icons.menu,
-          //       color: Colors.black,
-          //     ),
-          //     activeIcon: Icon(
-          //       Icons.menu,
-          //       color: Colors.green,
-          //     ),
-          //     title: Text("Menu"))
-        ],
       ),
     );
   }

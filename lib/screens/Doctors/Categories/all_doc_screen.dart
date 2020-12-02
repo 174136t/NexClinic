@@ -30,14 +30,15 @@ class _AllDocScreenState extends State<AllDocScreen> {
       child: Stack(
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.5,
+            // width: MediaQuery.of(context).size.width * 0.5,
             child: Card(
               color: checked ? Colors.orange : Colors.white,
               // shape: RoundedRectangleBorder(
               //   borderRadius: BorderRadius.circular(12),
               // ),
               child: Padding(
-                padding: const EdgeInsets.only(top: 1, bottom: 1,left: 2,right: 2),
+                padding:
+                    const EdgeInsets.only(top: 1, bottom: 1, left: 2, right: 2),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,18 +109,21 @@ class _AllDocScreenState extends State<AllDocScreen> {
                             ),
                             Text(
                               'Rs: 1500 upwards',
-                              style: TextStyle(fontWeight: FontWeight.w800,color: Colors.blue[800]),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.blue[800]),
                             ),
                           ],
                         ),
-                        ClipRRect(
-                          child: Image.asset(
-                            "assets/images/doctor1.png",
-                            height: MediaQuery.of(context).size.height * 0.15,
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            // width: double.infinity,
-                            // it cover the 25% of total height
-                            fit: BoxFit.fill,
+                        Expanded(
+                          child: ClipRRect(
+                            child: Image.asset(
+                              "assets/images/doctor1.png",
+                              // width: MediaQuery.of(context).size.width * 0.15,
+                              // width: double.infinity,
+                              // it cover the 25% of total height
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ],
@@ -137,8 +141,8 @@ class _AllDocScreenState extends State<AllDocScreen> {
   @override
   Widget build(BuildContext context) {
     return FadeAnimation(
-      1.2
-          , Scaffold(
+      1.2,
+      Scaffold(
         backgroundColor: Colors.blue[50],
         body: SingleChildScrollView(
           child: Column(
