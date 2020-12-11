@@ -1,18 +1,15 @@
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/Widgets/curved_widget.dart';
 import 'package:doctor_consultation_app/constant.dart';
-import 'package:doctor_consultation_app/screens/OTP_Auth/phone_auth.dart';
-import 'package:doctor_consultation_app/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:gender_selection/gender_selection.dart';
 
-class SignupScreen extends StatefulWidget {
+class PatientProfile extends StatefulWidget {
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  _PatientProfileState createState() => _PatientProfileState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  String email;
+class _PatientProfileState extends State<PatientProfile> {
+   String email;
   String firstName;
   String lastName;
   String password;
@@ -275,7 +272,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Sign Up',
+                                  'My Profile',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: size.height * 0.05,
@@ -285,7 +282,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   height: 5,
                                 ),
                                 Text(
-                                  "Fill these data correctly to begin",
+                                  "If anything is wrong you can change it and update",
                                   style: TextStyle(color: Colors.white),
                                 )
                               ],
@@ -296,123 +293,125 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(top: size.height * 0.25),
-                  child: FadeAnimation(
-                    1.6,
-                    Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            firstNameField(),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            lastNameField(),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            emailField(),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            passwordField(),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            addressField(),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              'Select your Gender',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            GenderSelection(
-                              maleText: "Male",
-                              femaleText: "Female",
-                              linearGradient: pinkRedGradient,
-                              selectedGenderIconBackgroundColor: Colors.indigo,
-                              checkIconAlignment: Alignment.centerRight,
-                              selectedGenderCheckIcon: null,
-                              onChanged: (Gender gender) {
-                                print(gender.index);
-                                if (gender.index == 0) {
-                                  this.sex = "Male";
-                                } else {
-                                  this.sex = "Female";
-                                }
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: size.height * 0.25),
+                    child: FadeAnimation(
+                      1.6,
+                      Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              firstNameField(),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              lastNameField(),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              emailField(),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              passwordField(),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              addressField(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // Text(
+                              //   'Select your Gender',
+                              //   style: TextStyle(fontSize: 18),
+                              // ),
+                              // GenderSelection(
+                              //   maleText: "Male",
+                              //   femaleText: "Female",
+                              //   linearGradient: pinkRedGradient,
+                              //   selectedGenderIconBackgroundColor: Colors.indigo,
+                              //   checkIconAlignment: Alignment.centerRight,
+                              //   selectedGenderCheckIcon: null,
+                              //   onChanged: (Gender gender) {
+                              //     print(gender.index);
+                              //     if (gender.index == 0) {
+                              //       this.sex = "Male";
+                              //     } else {
+                              //       this.sex = "Female";
+                              //     }
 
-                                print('jbj  $sex');
-                              },
-                              equallyAligned: true,
-                              animationDuration: Duration(milliseconds: 400),
-                              isCircular: true,
-                              isSelectedGenderIconCircular: true,
-                              opacityOfGradient: 0.6,
-                              padding: const EdgeInsets.all(3),
-                              size: size.height*0.12,
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            FadeAnimation(
-                              1.7,
-                              Container(
-                                height: size.height*0.06,
-                                width: size.width * 0.5,
-                                decoration: BoxDecoration(
-                                  // gradient: redGradient,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                      bottomLeft: Radius.circular(30),
-                                      bottomRight: Radius.circular(30)),
-                                ),
-                                child: MaterialButton(
-                                  color: Colors.blue[800],
-                                  onPressed: () {
-                                    print('sex$sex');
-                                    if (_formKey.currentState.validate() &&
-                                        sex != null) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PhoneLogin(
-                                            firstname: firstnameController.text,
-                                            lastname: lastnameController.text,
-                                            email: emailController.text,
-                                            address: addressController.text,
-                                            password: passwordController.text,
-                                            sex: sex,
-                                          ),
-                                        ),
-                                      );
-                                    } else if (_formKey.currentState
-                                            .validate() &&
-                                        sex == null) {
-                                      _showSnackBar();
-                                    }
-                                  },
-                                  // color: Color(0xffFC9535),
-                                  // padding: EdgeInsets.symmetric(
-                                  //   horizontal: 30,
-                                  // ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                              //     print('jbj  $sex');
+                              //   },
+                              //   equallyAligned: true,
+                              //   animationDuration: Duration(milliseconds: 400),
+                              //   isCircular: true,
+                              //   isSelectedGenderIconCircular: true,
+                              //   opacityOfGradient: 0.6,
+                              //   padding: const EdgeInsets.all(3),
+                              //   size: size.height*0.12,
+                              // ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              FadeAnimation(
+                                1.7,
+                                Container(
+                                  height: size.height*0.06,
+                                  width: size.width * 0.5,
+                                  decoration: BoxDecoration(
+                                    // gradient: redGradient,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                        bottomLeft: Radius.circular(30),
+                                        bottomRight: Radius.circular(30)),
                                   ),
-                                  child: Text(
-                                    'Next',
-                                    style: TextStyle(
-                                      color: kWhiteColor,
-                                      fontSize: size.height*0.025,
+                                  child: MaterialButton(
+                                    color: Colors.blue[800],
+                                    onPressed: () {
+                                      print('sex$sex');
+                                      if (_formKey.currentState.validate() &&
+                                          sex != null) {
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //     builder: (context) => PhoneLogin(
+                                        //       firstname: firstnameController.text,
+                                        //       lastname: lastnameController.text,
+                                        //       email: emailController.text,
+                                        //       address: addressController.text,
+                                        //       password: passwordController.text,
+                                        //       sex: sex,
+                                        //     ),
+                                        //   ),
+                                        // );
+                                      } else if (_formKey.currentState
+                                              .validate() &&
+                                          sex == null) {
+                                        _showSnackBar();
+                                      }
+                                    },
+                                    // color: Color(0xffFC9535),
+                                    // padding: EdgeInsets.symmetric(
+                                    //   horizontal: 30,
+                                    // ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      'Update',
+                                      style: TextStyle(
+                                        color: kWhiteColor,
+                                        fontSize: size.height*0.025,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )),
+                            ],
+                          )),
+                    ),
                   ),
                 ),
               ],
@@ -424,16 +423,16 @@ class _SignupScreenState extends State<SignupScreen> {
             SizedBox(
               height: 15,
             ),
-            FadeAnimation(
-              1.8,
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Text("NexClinic V.1.0"),
-              ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
+            // FadeAnimation(
+            //   1.8,
+            //   Align(
+            //     alignment: Alignment.bottomCenter,
+            //     child: Text("NexClinic V.1.0"),
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: 5,
+            // ),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:doctor_consultation_app/components/schedule_card.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Doctor_Booking/booking_screen.dart';
+import 'package:doctor_consultation_app/screens/Patient_Agora/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -128,14 +129,23 @@ class DetailScreen extends StatelessWidget {
                                   SizedBox(
                                     width: 16,
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color: kOrangeColor.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: SvgPicture.asset(
-                                      'assets/icons/video.svg',
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => IndexPage()),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: kOrangeColor.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: SvgPicture.asset(
+                                        'assets/icons/video.svg',
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -210,15 +220,14 @@ class DetailScreen extends StatelessWidget {
                         height: 20,
                       ),
                       Container(
-                         decoration: BoxDecoration(
-                  gradient: redGradient,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft:  Radius.circular(30),
-                    bottomRight:  Radius.circular(30)
-                  ),
-                ),
+                        decoration: BoxDecoration(
+                          gradient: redGradient,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30),
+                              topRight: Radius.circular(30),
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30)),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -231,7 +240,7 @@ class DetailScreen extends StatelessWidget {
                                   ),
                                 );
                               },
-                             // color: Color(0xffFC9535),
+                              // color: Color(0xffFC9535),
                               padding: EdgeInsets.symmetric(
                                 horizontal: 30,
                               ),

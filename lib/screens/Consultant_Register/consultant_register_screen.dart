@@ -15,7 +15,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
   String email;
   String firstName;
   String lastName;
-  // String password;
+  String password;
   String phone;
   String address;
   // String sex;
@@ -37,10 +37,12 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
   TextEditingController nicController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController specialityController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
 
   Widget firstNameField() {
     return Container(
-        width: 300,
+        width: MediaQuery.of(context).size.width * 0.8,
         child: TextFormField(
           controller: firstnameController,
           autofocus: false,
@@ -77,7 +79,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
 
   Widget lastNameField() {
     return Container(
-        width: 300,
+        width: MediaQuery.of(context).size.width * 0.8,
         child: TextFormField(
           controller: lastnameController,
           autofocus: false,
@@ -114,7 +116,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
 
   Widget emailField() {
     return Container(
-        width: 300,
+        width: MediaQuery.of(context).size.width * 0.8,
         child: TextFormField(
           controller: emailController,
           autofocus: false,
@@ -151,7 +153,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
 
   Widget addressField() {
     return Container(
-        width: 300,
+       width: MediaQuery.of(context).size.width * 0.8,
         child: TextFormField(
           controller: addressController,
           autofocus: false,
@@ -188,7 +190,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
 
   Widget nicField() {
     return Container(
-        width: 300,
+       width: MediaQuery.of(context).size.width * 0.8,
         child: TextFormField(
           controller: nicController,
           autofocus: false,
@@ -260,6 +262,68 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
   //       ));
   // }
 
+  bool _obscureText = true;
+  void _toggle() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  Widget passwordField() {
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: TextFormField(
+          cursorColor: Colors.black,
+          // style: TextStyle(
+          //     color: Colors.black, fontWeight: FontWeight.w800, fontSize: 18),
+          controller: passwordController,
+          autofocus: false,
+          obscureText: _obscureText,
+          decoration: InputDecoration(
+            // focusedBorder: OutlineInputBorder(
+            //   borderSide: BorderSide(color: Colors.black, ),
+            //   borderRadius: BorderRadius.circular(15.0),
+            // ),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10.0)),
+            // enabledBorder: OutlineInputBorder(
+            //   borderSide: BorderSide(color: Colors.black, ),
+            //   borderRadius: BorderRadius.circular(15.0),
+            // ),
+            prefixIcon: Icon(
+              Icons.vpn_key,
+              color: Colors.black,
+            ),
+            suffixIcon: GestureDetector(
+              onTap: _toggle,
+              child: Padding(
+                  padding: EdgeInsets.all(0.0),
+                  child: _obscureText == true
+                      ? Icon(
+                          Icons.visibility_off,
+                          color: Colors.black,
+                        )
+                      : Icon(
+                          Icons.visibility,
+                          color: Colors.black,
+                        )),
+            ),
+            hintText: 'Password',
+            hintStyle: TextStyle(color: Colors.black),
+            errorStyle: TextStyle(color: Colors.red),
+            filled: true,
+            fillColor: Colors.white70,
+          ),
+          validator: (value) {
+            if (value.isEmpty || value.length < 6) {
+              return 'Minimum password length is 6';
+            }
+          },
+          onSaved: (String value) {
+            this.password = value;
+          },
+        ));
+  }
   void _showSnackBar() {
     final snackBar = SnackBar(
       content: Text('Please select your Spoeciality!'),
@@ -337,6 +401,10 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
                         SizedBox(
                           height: 5,
                         ),
+                        passwordField(),
+                         SizedBox(
+                          height: 5,
+                        ),
                         addressField(),
                         SizedBox(
                           height: 5,
@@ -350,7 +418,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
                         //   height: 10,
                         // ),
                         Container(
-                          width: 300,
+                         width: MediaQuery.of(context).size.width * 0.8,
                           decoration: BoxDecoration(
                             color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(15)),

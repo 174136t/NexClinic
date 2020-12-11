@@ -10,6 +10,7 @@ import 'package:doctor_consultation_app/screens/Doctors/doctor_main_screen.dart'
 import 'package:doctor_consultation_app/screens/Patient_Agora/index.dart';
 import 'package:doctor_consultation_app/screens/login_screen.dart';
 import 'package:doctor_consultation_app/screens/onboarding_screen.dart';
+import 'package:doctor_consultation_app/screens/patient_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +27,28 @@ class _HomeScreenState extends State<HomeScreen> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int currentIndex;
+  FirebaseUser user;
+  String uid;
+
   @override
   void initState() {
     // ignore: todo
     // TODO: implement initState
     super.initState();
     currentIndex = 0;
+
+    getCurrentUser();
+    print('aaaaaaaaaa');
+    print(uid);
+    print('aaaaaaaaaa');
+  }
+
+  void getCurrentUser() async {
+    FirebaseUser _user = await _auth.currentUser();
+    setState(() {
+      user = _user;
+      uid = _user.uid;
+    });
   }
 
   void changePage(int index) {
@@ -83,9 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-Future<void> _signOut() async {
+  Future<void> _signOut() async {
     await _auth.signOut();
-   
   }
 
   _showWarningDialog(BuildContext context) {
@@ -96,10 +112,8 @@ Future<void> _signOut() async {
             dialogBackgroundColor: Colors.grey[100],
             backgroundColor: Colors.white),
         child: AlertDialog(
-        
           elevation: 5.0,
           shape: RoundedRectangleBorder(
-            
               borderRadius: new BorderRadius.only(
                   topRight: Radius.circular(35),
                   bottomLeft: Radius.circular(35))),
@@ -113,7 +127,7 @@ Future<void> _signOut() async {
           ),
           actions: <Widget>[
             new FlatButton(
-                color: Colors.red[600],
+              color: Colors.red[600],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
                 // side: BorderSide(color: Colors.indigo)
@@ -131,7 +145,7 @@ Future<void> _signOut() async {
               child: new Text('Yes'),
             ),
             new FlatButton(
-           color: Colors.red[400],
+              color: Colors.red[400],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(18.0),
                 //side: BorderSide(color: Colors.indigo)
@@ -150,7 +164,7 @@ Future<void> _signOut() async {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: SafeArea(
-              child: Scaffold(
+        child: Scaffold(
           key: _drawerKey,
           backgroundColor: kBackgroundColor,
           drawer: Drawer(
@@ -165,7 +179,8 @@ Future<void> _signOut() async {
                 title: Text('Choose'),
               ),*/
                 FadeAnimation(
-                               1.2, new UserAccountsDrawerHeader(
+                  1.2,
+                  new UserAccountsDrawerHeader(
                     decoration: BoxDecoration(color: Colors.transparent),
                     accountName: new Text('Lahiru Neranjan'),
                     accountEmail: new Text('lahiruneranjan123@gmail.com'),
@@ -179,12 +194,14 @@ Future<void> _signOut() async {
                   ),
                 ),
                 FadeAnimation(
-                               1.3, Divider(
+                  1.3,
+                  Divider(
                     color: Colors.white,
                   ),
                 ),
                 FadeAnimation(
-                               1.4, ListTile(
+                  1.4,
+                  ListTile(
                     leading: Icon(Icons.video_call, color: Colors.white),
                     title: Text(
                       'Video Consultation',
@@ -229,9 +246,13 @@ Future<void> _signOut() async {
                 //   },
                 // ),
                 FadeAnimation(
-                               1.4, ListTile(
+                  1.4,
+                  ListTile(
                       leading: Icon(Icons.exit_to_app, color: Colors.white),
-                      title: Text('Log out',style: TextStyle(color: Colors.white),),
+                      title: Text(
+                        'Log out',
+                        style: TextStyle(color: Colors.white),
+                      ),
                       onTap: () {
                         _showWarningDialog(context);
                       }),
@@ -265,7 +286,8 @@ Future<void> _signOut() async {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   GestureDetector(
                                     onTap: () {
@@ -331,7 +353,8 @@ Future<void> _signOut() async {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 30),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
                                     'Categories',
@@ -422,8 +445,15 @@ Future<void> _signOut() async {
             IndexPage()
           ][currentIndex],
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
-            child: Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PatientProfile(),
+          ),
+        );
+            },
+            child: Icon(Icons.account_circle),
             backgroundColor: Colors.red,
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

@@ -10,7 +10,14 @@ class PhoneLogin extends StatefulWidget {
   final String email;
   final String address;
   final String sex;
-  PhoneLogin({Key key, this.firstname, this.lastname, this.email, this.address, this.sex})
+  final String password;
+  PhoneLogin(
+      {Key key,
+      this.firstname,
+      this.lastname,
+      this.email,
+      this.address,
+      this.sex, this.password})
       : super(key: key);
 
   @override
@@ -269,10 +276,13 @@ class _PhoneLoginState extends State<PhoneLogin> with TickerProviderStateMixin {
                                                                       .email,
                                                                   firstname: widget
                                                                       .firstname,
-                                                                      lastname: widget.lastname,
-                                                                      sex: widget.sex,
+                                                                  lastname: widget
+                                                                      .lastname,
+                                                                  sex: widget
+                                                                      .sex,
                                                                   address: widget
                                                                       .address,
+                                                                      password: widget.password,
                                                                 ),
                                                               ));
                                                         } else {

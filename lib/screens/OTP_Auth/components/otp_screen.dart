@@ -12,16 +12,17 @@ class OTPScreen extends StatefulWidget {
   final String lastname;
   final String email;
   final String address;
+  final String password;
   final String sex;
-  OTPScreen({
-    Key key,
-    @required this.mobileNumber,
-    this.firstname,
-    this.lastname,
-    this.email,
-    this.address,
-    this.sex
-  })  : assert(mobileNumber != null),
+  OTPScreen(
+      {Key key,
+      @required this.mobileNumber,
+      this.firstname,
+      this.lastname,
+      this.email,
+      this.address,
+      this.sex, this.password})
+      : assert(mobileNumber != null),
         super(key: key);
 
   @override
@@ -187,14 +188,15 @@ class _OTPScreenState extends State<OTPScreen> {
               context,
               MaterialPageRoute(
                 builder: (context) => OnboardingScreen(
-                    user: value.user,
+                  user: value.user,
                   email: widget.email,
                   firstname: widget.firstname,
                   lastname: widget.lastname,
                   mobileNumber: widget.mobileNumber,
                   address: widget.address,
+                  password: widget.password,
                   sex: widget.sex,
-                    ),
+                ),
               ),
               (Route<dynamic> route) => false);
 
@@ -269,14 +271,15 @@ class _OTPScreenState extends State<OTPScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => OnboardingScreen(
-                  user: value.user,
-                  email: widget.email,
-                  firstname: widget.firstname,
-                  lastname: widget.lastname,
-                  mobileNumber: widget.mobileNumber,
-                  address: widget.address,
-                  sex: widget.sex,
-                  ),
+                user: value.user,
+                email: widget.email,
+                firstname: widget.firstname,
+                lastname: widget.lastname,
+                mobileNumber: widget.mobileNumber,
+                address: widget.address,
+                password: widget.password,
+                sex: widget.sex,
+              ),
             ),
             (Route<dynamic> route) => false);
       } else {
