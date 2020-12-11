@@ -3,6 +3,7 @@ import 'package:doctor_consultation_app/Widgets/curved_widget.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Home/consultant_home_screen.dart';
 import 'package:doctor_consultation_app/screens/User_Type/userType_screen.dart';
 import 'package:doctor_consultation_app/screens/home_screen.dart';
+import 'package:doctor_consultation_app/screens/login_form_screen.dart';
 import 'package:doctor_consultation_app/screens/onboarding_screen.dart';
 import 'package:doctor_consultation_app/screens/register_screen.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               1.6,
               Container(
                 width: size.width * 0.5,
-                height: 45,
+                height: size.height*0.058,
                 child: OutlineButton(
                   borderSide: BorderSide(
                       color: Colors.blue[800],
@@ -84,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HomeScreen(),
+                        builder: (context) => LoginForm(),
                       ),
                     );
                   },
@@ -98,8 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text(
                     'Sign In',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                      color: Colors.blue[800],
+                      fontSize: size.height*0.025,
                     ),
                   ),
                 ),
@@ -111,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
             FadeAnimation(
               1.7,
               Container(
-                height: 45,
+                height: size.height*0.06,
                 width: size.width * 0.5,
                 decoration: BoxDecoration(
                   // gradient: redGradient,
@@ -142,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     'Sign Up',
                     style: TextStyle(
                       color: kWhiteColor,
-                      fontSize: 18,
+                      fontSize: size.height*0.025,
                     ),
                   ),
                 ),

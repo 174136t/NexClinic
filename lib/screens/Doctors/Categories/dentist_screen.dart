@@ -1,4 +1,5 @@
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
+import 'package:doctor_consultation_app/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class DentistScreen extends StatefulWidget {
@@ -27,6 +28,12 @@ class _DentistScreenState extends State<DentistScreen> {
             checkedIndex1 = index;
           });
         }
+         Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen( 'Dr. Manoj Randeniya', 'Heart Surgeon - Flower Hospitals', 'assets/images/doctor1.png',),
+          ),
+        );
       },
       child: Stack(
         children: <Widget>[

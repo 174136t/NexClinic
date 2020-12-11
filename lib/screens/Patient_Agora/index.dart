@@ -76,7 +76,7 @@ class IndexState extends State<IndexPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(height: size.height*0.03,),
-                          Text("Enter Consultation Code and Press Start button to Begin the Video Consultation",
+                          Text("Enter Consultation Code and Press Join button to Begin the Video Consultation",
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 22

@@ -15,6 +15,7 @@ class OnboardingScreen extends StatefulWidget {
   final String lastname;
   final String email;
   final String address;
+  final String password;
   final String sex;
 
   const OnboardingScreen(
@@ -25,7 +26,7 @@ class OnboardingScreen extends StatefulWidget {
       this.lastname,
       this.email,
       this.address,
-      this.sex})
+      this.sex, this.password})
       : super(key: key);
   @override
   _OnboardingScreenState createState() => _OnboardingScreenState();
@@ -53,6 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'address': widget.address,
           'gender': widget.sex,
           'phone': widget.mobileNumber,
+          'password':widget.password,
           'usertype': "patient",
         });
         print("${widget.firstname}");
@@ -81,7 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
-          child: Scaffold(
+      child: Scaffold(
         body: SingleChildScrollView(
           child: Container(
             height: size.height,
