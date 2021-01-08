@@ -351,7 +351,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               isSelectedGenderIconCircular: true,
                               opacityOfGradient: 0.6,
                               padding: const EdgeInsets.all(3),
-                              size: size.height*0.12,
+                              size: size.height * 0.12,
                             ),
                             SizedBox(
                               height: 30,
@@ -359,7 +359,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             FadeAnimation(
                               1.7,
                               Container(
-                                height: size.height*0.06,
+                                height: size.height * 0.06,
                                 width: size.width * 0.5,
                                 decoration: BoxDecoration(
                                   // gradient: redGradient,
@@ -405,7 +405,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     'Next',
                                     style: TextStyle(
                                       color: kWhiteColor,
-                                      fontSize: size.height*0.025,
+                                      fontSize: size.height * 0.025,
                                     ),
                                   ),
                                 ),
@@ -431,6 +431,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Text("NexClinic V.1.0"),
               ),
             ),
+
             SizedBox(
               height: 5,
             ),

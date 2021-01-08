@@ -23,7 +23,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
   String _selectedSpeciality;
   List<String> _specialities = [
     'Paediatrician',
-    'Dermaotoologist',
+    'Dermaotologist',
     'Physician',
     'Psychiatrist'
   ]; // Option 2
@@ -428,6 +428,7 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
                             child: Center(
                               child: DropdownButton(
                                 //   icon: Icon(Icons.folder_special),
+                                underline: Container(),
                                 isDense: true,
                                 isExpanded: true,
                                 hint: Text(
@@ -435,6 +436,9 @@ class _ConsultantRegisterScreenState extends State<ConsultantRegisterScreen> {
                                   style: TextStyle(color: Colors.black),
                                 ), // Not necessary for Option 1
                                 value: _selectedSpeciality,
+                                onTap: (){
+                                   FocusScope.of(context).unfocus();
+                                },
                                 onChanged: (newValue) {
                                   setState(() {
                                     _selectedSpeciality = newValue;

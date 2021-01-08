@@ -1,16 +1,20 @@
+import 'package:doctor_consultation_app/Widgets/form_widget.dart';
 import 'package:doctor_consultation_app/components/schedule_card.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Doctor_Booking/booking_screen.dart';
+import 'package:doctor_consultation_app/screens/Doctors/Categories/all_doc_screen.dart';
+import 'package:doctor_consultation_app/screens/Doctors/doctor_main_screen.dart';
 import 'package:doctor_consultation_app/screens/Patient_Agora/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class DetailScreen extends StatelessWidget {
-  var _name;
-  var _description;
-  var _imageUrl;
+  var name;
+  var description;
+  var imageUrl;
+  var uid;
 
-  DetailScreen(this._name, this._description, this._imageUrl);
+  DetailScreen(this.name, this.description, this.imageUrl, this.uid);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,11 @@ class DetailScreen extends StatelessWidget {
                   children: <Widget>[
                     InkWell(
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DoctorMainScreen()),
+                        );
                       },
                       child: SvgPicture.asset(
                         'assets/icons/back.svg',
@@ -72,7 +80,7 @@ class DetailScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Image.asset(
-                            _imageUrl,
+                            imageUrl,
                             height: 100,
                           ),
                           SizedBox(
@@ -82,7 +90,7 @@ class DetailScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                _name,
+                                name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -93,7 +101,7 @@ class DetailScreen extends StatelessWidget {
                                 height: 10,
                               ),
                               Text(
-                                _description,
+                                description,
                                 style: TextStyle(
                                   color: kTitleTextColor.withOpacity(0.7),
                                 ),
@@ -236,7 +244,8 @@ class DetailScreen extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => BookingScreen(),
+                                    builder: (context) =>
+                                        BookingScreen(uid, name),
                                   ),
                                 );
                               },

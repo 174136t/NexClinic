@@ -28,12 +28,12 @@ class _DentistScreenState extends State<DentistScreen> {
             checkedIndex1 = index;
           });
         }
-         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen( 'Dr. Manoj Randeniya', 'Heart Surgeon - Flower Hospitals', 'assets/images/doctor1.png',),
-          ),
-        );
+        //  Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailScreen( 'Dr. Manoj Randeniya', 'Heart Surgeon - Flower Hospitals', 'assets/images/doctor1.png',uid),
+        //   ),
+        // );
       },
       child: Stack(
         children: <Widget>[

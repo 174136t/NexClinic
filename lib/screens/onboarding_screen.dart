@@ -52,6 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'lastname': widget.lastname,
           'email': widget.email,
           'address': widget.address,
+          'uid':user.uid,
           'gender': widget.sex,
           'phone': widget.mobileNumber,
           'password':widget.password,

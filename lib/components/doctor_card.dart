@@ -11,16 +11,21 @@ class DoctorCard extends StatelessWidget {
   DoctorCard(this._name, this._description, this._imageUrl, this._bgColor);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailScreen(_name, _description, _imageUrl),
+        //   ),
+        // );
     return InkWell(
       
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen(_name, _description, _imageUrl),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailScreen(_name, _description, _imageUrl),
+        //   ),
+        // );
       },
       child: DecoratedBox(
         

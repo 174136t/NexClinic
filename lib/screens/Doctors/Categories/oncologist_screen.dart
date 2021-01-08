@@ -28,12 +28,12 @@ class _OncologistScreenState extends State<OncologistScreen> {
             checkedIndex1 = index;
           });
         }
-         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailScreen( 'Dr. Manoj Randeniya', 'Heart Surgeon - Flower Hospitals', 'assets/images/doctor1.png',),
-          ),
-        );
+        //  Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => DetailScreen( 'Dr. Manoj Randeniya', 'Heart Surgeon - Flower Hospitals', 'assets/images/doctor1.png',),
+        //   ),
+        // );
       },
       child: Stack(
         children: <Widget>[

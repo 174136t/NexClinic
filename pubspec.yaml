@@ -29,6 +29,8 @@ dependencies:
   agora_rtc_engine: ^3.0.1-dev.7
   permission_handler: ^3.0.0
   cloud_firestore: ^0.11.0+2
+  timeline_tile: ^0.1.0
+  flutter_spinkit: "^4.1.2"
   
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UpcomingScreen extends StatefulWidget {
   @override
@@ -9,9 +12,20 @@ class UpcomingScreen extends StatefulWidget {
 class _UpcomingScreenState extends State<UpcomingScreen> {
   int checkedIndex3 = -1;
 
-  Widget buildUpcomingCard(int index) {
-    bool checked = index == checkedIndex3;
-
+  Widget buildUpcomingCard(
+      int index,
+      String date,
+      int time,
+      String name,
+      String type,
+      int start,
+      String unit,
+      String documentId,
+      String timezone,
+      int arrIndex) {
+    // bool checked = index == checkedIndex3;
+    int begin = time + start;
+    int end = time + start + 1;
     return GestureDetector(
         onTap: () {},
         child: Padding(
@@ -48,7 +62,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                   color: Colors.grey[600],
                                   fontWeight: FontWeight.w900),
                             ),
-                            Text('25 Oct 2020')
+                            Text(date)
                           ],
                         ),
                         Column(
@@ -56,12 +70,12 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Time',
+                              'Time($unit)',
                               style: TextStyle(
                                   color: Colors.grey[600],
                                   fontWeight: FontWeight.w900),
                             ),
-                            Text('2.30 pm - 3.00 pm')
+                            Text("$begin.00 - $end.00")
                           ],
                         ),
                         Column(
@@ -73,7 +87,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                   color: Colors.grey[600],
                                   fontWeight: FontWeight.w900),
                             ),
-                            Text('Manoj Randeniya')
+                            Text(name)
                           ],
                         )
                       ],
@@ -98,7 +112,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                   color: Colors.grey[600],
                                   fontWeight: FontWeight.w900),
                             ),
-                            Text('Dentist')
+                            Text(type)
                           ],
                         ),
                         Column(
@@ -140,7 +154,8 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  showCancelDialog(context);
+                                  showCancelDialog(
+                                      context, documentId, timezone, arrIndex);
                                 },
                                 child: Container(
                                   width:
@@ -286,7 +301,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
             )));
   }
 
-  showCancelDialog(BuildContext context) {
+  showCancelDialog(BuildContext context, String id, String timezone, int arr) {
     showDialog(
         context: context,
         builder: (context) => new Theme(
@@ -364,7 +379,31 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                     style: TextStyle(color: Colors.white)),
                               ],
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              print('preessssssss');
+                              print([arr]);
+                              Firestore.instance
+                                  .collection('bookingslots')
+                                  .document(pid)
+                                  .collection(pid)
+                                  .document(id)
+                                  .get()
+                                  .then((DocumentSnapshot ds) {
+                                List<dynamic> list =
+                                    List.from(ds.data['$timezone']);
+                                print(list);
+                              });
+                              // Future<DocumentSnapshot> refff = ref.get();
+                              // print(refff.da);
+                              // await Firestore.instance
+                              //     .collection('bookingslots')
+                              //     .document(pid)
+                              //     .collection(pid)
+                              //     .document(id)
+                              //     .updateData({
+                              //   timezone: FieldValue.arrayRemove([arr])
+                              // });
+                            },
                           ),
                         ),
                       ),
@@ -392,15 +431,150 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
             )));
   }
 
+  String pid;
+  String docName = "";
+  String speciality = "";
+  Future<void> getUser() async {
+    FirebaseUser _user = await FirebaseAuth.instance.currentUser();
+    setState(() {
+      pid = _user.uid;
+    });
+  }
+
+  Future<void> getDocData(String idno) async {
+    var documentList;
+
+    documentList = await Firestore.instance
+        .collection('doctors')
+        .where("uid", isEqualTo: idno)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = documentList.documents;
+    setState(() {
+      docName = documents.first.data['firstname'] +
+          " " +
+          documents.first.data['lastname'];
+      speciality = documents.first.data['speciality'];
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue[100],
-      body: new ListView.builder(
-          itemCount: 3,
-          itemBuilder: (BuildContext ctxt, int index) {
-            return buildUpcomingCard(index);
-          }),
+      body: StreamBuilder(
+        stream: Firestore.instance
+            .collection('bookingslots')
+            .document(pid)
+            .collection(pid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!(snapshot.hasData)) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SpinKitFadingFour(
+                  color: Colors.blue,
+                ),
+                Text("No appointmnets"),
+              ],
+            );
+          } else {
+            List<DocumentSnapshot> bookData = snapshot.data.documents;
+            // print(bookData[0]['morning'].length);
+            getDocData(bookData[0]["docId"]);
+            // print(bookData[0].documentID);
+            return new ListView.builder(
+                shrinkWrap: true,
+                itemCount: bookData.length,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  // if(bookData[index]['morning'] != null){
+                  return Column(
+                    children: [
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bookData[index]['morning'].length,
+                          itemBuilder: (BuildContext context1, int index1) {
+                            return bookData[index]['morning'][index1]['slot'] ==
+                                    3
+                                ? buildUpcomingCard(
+                                    index1,
+                                    bookData[index]['date'],
+                                    bookData[index]['morning'][index1]['slot'],
+                                    docName,
+                                    speciality,
+                                    8,
+                                    "am",
+                                    bookData[index].documentID,
+                                    'morning',
+                                    index1)
+                                : Container();
+                          }),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bookData[index]['afternoon'].length,
+                          itemBuilder: (BuildContext context1, int index1) {
+                            return buildUpcomingCard(
+                                index1,
+                                bookData[index]['date'],
+                                bookData[index]['afternoon'][index1]['slot'],
+                                docName,
+                                speciality,
+                                12,
+                                "pm",
+                                bookData[index].documentID,
+                                'afternoon',
+                                index1);
+                          }),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bookData[index]['evening'].length,
+                          itemBuilder: (BuildContext context1, int index1) {
+                            return buildUpcomingCard(
+                                index1,
+                                bookData[index]['date'],
+                                bookData[index]['evening'][index1]['slot'],
+                                docName,
+                                speciality,
+                                16,
+                                "pm",
+                                bookData[index].documentID,
+                                "evening",
+                                index1);
+                          })
+                    ],
+                  );
+                  // bookData[index]['morning'] != null
+                  //     ? buildUpcomingCard(
+                  //         index,
+                  //         bookData[index]['date'],
+                  //         bookData[index]['morning'][index]['slot'],
+                  //         bookData[index]['docId'])
+                  //     :bookData[index]['afternoon'] != null? buildUpcomingCard(
+                  //         index,
+                  //         bookData[index]['date'],
+                  //         bookData[index]['afternoon'][index]['slot'],
+                  //         bookData[index]['docId'])
+                  //         :bookData[index]['evening'] != null?buildUpcomingCard(
+                  //         index,
+                  //         bookData[index]['date'],
+                  //         bookData[index]['evening'][index]['slot'],
+                  //         bookData[index]['docId']):Container();
+                  // }
+                });
+          }
+        },
+      ),
     );
   }
 }

@@ -5,6 +5,9 @@ import 'package:doctor_consultation_app/screens/My_appointments/upcoming_screen.
 import 'package:flutter/material.dart';
 
 class MyAppointmentsHomeScreen extends StatefulWidget {
+  // var uid;
+  // var name;
+  // MyAppointmentsHomeScreen(this.uid,this.name);
   @override
   _MyAppointmentsHomeScreenState createState() =>
       _MyAppointmentsHomeScreenState();
@@ -51,12 +54,14 @@ class _MyAppointmentsHomeScreenState extends State<MyAppointmentsHomeScreen> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                 Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookingScreen(),
-                      ),
-                    );
+                  Navigator.pop(context);
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) =>
+                  //         BookingScreen(widget.uid, widget.name),
+                  //   ),
+                  // );
                 }),
           ),
           body: TabBarView(
