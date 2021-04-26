@@ -310,6 +310,7 @@ class _EditScreenState extends State<EditScreen> {
                       FadeAnimation(
                         1.4,
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.center,

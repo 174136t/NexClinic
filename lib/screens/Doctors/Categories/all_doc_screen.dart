@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/screens/detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -9,28 +10,34 @@ class AllDocScreen extends StatefulWidget {
 
 class _AllDocScreenState extends State<AllDocScreen> {
   int checkedIndex1 = -1;
-  Widget buildAllDocCard(int index) {
+  Widget buildAllDocCard(
+      int index, String firstname, String lastname, String speciality,String uid) {
     bool checked = index == checkedIndex1;
 
     return GestureDetector(
       onTap: () {
-        if (checkedIndex1 == -1) {
-          setState(() {
-            checkedIndex1 = index;
-          });
-        } else if (checkedIndex1 == index) {
-          setState(() {
-            checkedIndex1 = -1;
-          });
-        } else {
-          setState(() {
-            checkedIndex1 = index;
-          });
-        }
-         Navigator.push(
+        // if (checkedIndex1 == -1) {
+        //   setState(() {
+        //     checkedIndex1 = index;
+        //   });
+        // } else if (checkedIndex1 == index) {
+        //   setState(() {
+        //     checkedIndex1 = -1;
+        //   });
+        // } else {
+        //   setState(() {
+        //     checkedIndex1 = index;
+        //   });
+        // }
+        Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailScreen( 'Dr. Manoj Randeniya', 'Heart Surgeon - Flower Hospitals', 'assets/images/doctor1.png',),
+            builder: (context) => DetailScreen(
+              firstname + " " + lastname,
+              'Heart Surgeon - Flower Hospitals',
+              'assets/images/doctor1.png',
+              uid
+            ),
           ),
         );
       },
@@ -51,7 +58,7 @@ class _AllDocScreenState extends State<AllDocScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Dr. Manoj Randeniya',
+                      firstname + " " + lastname,
                       style:
                           TextStyle(fontWeight: FontWeight.w800, fontSize: 16),
                     ),
@@ -67,7 +74,7 @@ class _AllDocScreenState extends State<AllDocScreen> {
                               height: 8,
                             ),
                             Text(
-                              'Dentist',
+                              speciality,
                               style: TextStyle(fontWeight: FontWeight.w800),
                             ),
                             SizedBox(
@@ -154,18 +161,43 @@ class _AllDocScreenState extends State<AllDocScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: 12, //data.length,
-                  gridDelegate: new SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: MediaQuery.of(context).size.width /
-                          (MediaQuery.of(context).size.height * 0.5 / 1),
-                      crossAxisCount: 2),
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildAllDocCard(index);
-                  }),
+              StreamBuilder(
+                stream: Firestore.instance.collection('doctors').snapshots(),
+                builder: (context, snapshot) {
+                  if (!(snapshot.hasData)) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    print(snapshot.data.documents.runtimeType);
+                    List<DocumentSnapshot> docData = snapshot.data.documents;
+                   
+                    return GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot
+                            .data.documents.length, //data.length,
+                        gridDelegate:
+                            new SliverGridDelegateWithFixedCrossAxisCount(
+                                childAspectRatio:
+                                    MediaQuery.of(context).size.width /
+                                        (MediaQuery.of(context).size.height *
+                                            0.5 /
+                                            1),
+                                crossAxisCount: 2),
+                        itemBuilder: (BuildContext context, int index) {
+                           print(docData[index]['uid']);
+                          return buildAllDocCard(
+                              index,
+                              docData[index]['firstname'],
+                              docData[index]['lastname'],
+                              docData[index]['speciality'],
+                              docData[index]['uid']);
+                        });
+                  }
+                },
+              ),
             ],
           ),
         ),

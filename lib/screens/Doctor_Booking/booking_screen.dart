@@ -1,17 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/My_appointments/myAppintmentsHome_screen.dart';
 import 'package:doctor_consultation_app/screens/detail_screen.dart';
 import 'package:doctor_consultation_app/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:spring/spring.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingScreen extends StatefulWidget {
-  // var _name;
+  var _uid;
+  var name;
   // var _description;
   // var _imageUrl;
   // var _bgColor;
-  // BookingScreen(this._name, this._description, this._imageUrl, this._bgColor);
+  BookingScreen(this._uid, this.name);
   @override
   _BookingScreenState createState() => _BookingScreenState();
 }
@@ -22,11 +27,26 @@ class _BookingScreenState extends State<BookingScreen> {
   int checkedIndex1 = -1;
   int checkedIndex2 = -1;
   int checkedIndex3 = -1;
+  String selectedDay = "";
+  String selectedDate = "";
+  List _selectedMorningIndexList = List();
+  List _selectedMorningIndex = List();
+  List _selectedAfternoonIndexList = List();
+  List _selectedAfternoonIndex = List();
+  List _selectedEveningIndexList = List();
+  List _selectedEveningIndex = List();
+  final _key = GlobalKey<SpringState>();
+  final _key2 = GlobalKey<SpringState>();
+  final _key3 = GlobalKey<SpringState>();
 
   @override
   void initState() {
     super.initState();
+    getDocData(widget._uid);
     _controller = CalendarController();
+    _selectedMorningIndexList.length = 0;
+    _selectedAfternoonIndexList.length = 0;
+    _selectedEveningIndexList.length = 0;
   }
 
   showWarningDialog(BuildContext context) {
@@ -112,7 +132,9 @@ class _BookingScreenState extends State<BookingScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      MyAppointmentsHomeScreen(),
+                                      MyAppointmentsHomeScreen(
+                                          // widget._uid, widget.name
+                                          ),
                                 ),
                               );
                             },
@@ -128,7 +150,7 @@ class _BookingScreenState extends State<BookingScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                                 side: BorderSide(color: Colors.blue[800])),
-                            child: Text('Back to home',
+                            child: Text('Back',
                                 style: TextStyle(color: Colors.blue[800])),
                             onPressed: () {
                               Navigator.pop(context, true);
@@ -143,157 +165,286 @@ class _BookingScreenState extends State<BookingScreen> {
             )));
   }
 
-  Widget buildMorningCard(int index) {
+  showNoSelectWarningDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => new Theme(
+            data: Theme.of(context).copyWith(
+                dialogBackgroundColor: Colors.white,
+                backgroundColor: Colors.white),
+            child: Container(
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                title: FadeAnimation(
+                  1.1,
+                  Center(
+                    child: Text(
+                      'You haven\'t select any slot!',
+                      style: TextStyle(
+                          color: Colors.blue[800], fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                content: FadeAnimation(
+                  1.2,
+                  Text(
+                    'Please select any time slot you want and try again',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                actions: <Widget>[
+                  Column(
+                    children: [
+                      FadeAnimation(
+                        1.3,
+                        ClipRRect(
+                          child: Image.asset(
+                            "assets/images/dooct.png",
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            // width: double.infinity,
+                            // it cover the 25% of total height
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      FadeAnimation(
+                        1.4,
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: FlatButton(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                                side: BorderSide(color: Colors.blue[800])),
+                            child: Text('Ok',
+                                style: TextStyle(color: Colors.blue[800])),
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )));
+  }
+
+  Widget buildMorningCard(int index, int slot) {
+    int start = 8;
     bool checked = index == checkedIndex1;
 
     return GestureDetector(
       onTap: () {
-        if (checkedIndex1 == -1) {
-          setState(() {
-            checkedIndex1 = index;
-          });
-        } else if (checkedIndex1 == index) {
-          setState(() {
-            checkedIndex1 = -1;
-          });
-        } else {
-          setState(() {
-            checkedIndex1 = index;
-          });
-        }
+        setState(() {
+          if (_selectedMorningIndex.contains(index)) {
+            _selectedMorningIndexList
+                .removeWhere((element) => element["slot"] == index);
+            _selectedMorningIndex.remove(index);
+          } else {
+            _selectedMorningIndex.add(index);
+            _selectedMorningIndexList.add({"slot": index, "isBooked": 1});
+          }
+        });
+        print("morning: $_selectedMorningIndexList");
+        // if (checkedIndex1 == -1) {
+        //   setState(() {
+        //     checkedIndex1 = index;
+        //      _selectedMorningIndexList.add(index);
+        //   });
+        // } else if (checkedIndex1 == index) {
+        //   setState(() {
+        //     checkedIndex1 = -1;
+        //     _selectedMorningIndexList.remove(index);
+        //   });
+        // } else {
+        //   setState(() {
+        //     checkedIndex1 = index;
+        //      _selectedMorningIndexList.add(index);
+        //   });
+        // }
+        print("morning: $_selectedMorningIndex");
       },
       child: Stack(
         children: <Widget>[
           Card(
-            color: checked ? Colors.orange : Colors.white,
+            color: _selectedMorningIndex.contains(index)
+                ? Colors.deepPurple
+                : Colors.white,
             // shape: RoundedRectangleBorder(
             //   borderRadius: BorderRadius.circular(12),
             // ),
             child: Container(
-              child: Center(child: Text("$index")),
+              child: Center(
+                  child: Text(
+                "${start + slot}.00 - ${start + 1 + slot}.00 ",
+                style: TextStyle(
+                    color: _selectedMorningIndex.contains(index)
+                        ? Colors.white
+                        : Colors.black),
+              )),
             ),
           ),
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Offstage(
-              offstage: !checked,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 2),
-                    shape: BoxShape.circle),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 12,
+          //   right: 12,
+          //   child: Offstage(
+          //     offstage: !checked,
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //           color: Colors.white,
+          //           border: Border.all(width: 2),
+          //           shape: BoxShape.circle),
+          //       child: Icon(
+          //         Icons.check,
+          //         color: Colors.blue,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  Widget buildAfternoonCard(int index) {
-    bool checked = index == checkedIndex2;
-
+  Widget buildAfternoonCard(int index, int slot) {
+    int start = 12;
     return GestureDetector(
       onTap: () {
-        if (checkedIndex2 == -1) {
-          setState(() {
-            checkedIndex2 = index;
-          });
-        } else if (checkedIndex2 == index) {
-          setState(() {
-            checkedIndex2 = -1;
-          });
-        } else {
-          setState(() {
-            checkedIndex2 = index;
-          });
-        }
+        setState(() {
+          if (_selectedAfternoonIndex.contains(index)) {
+            _selectedAfternoonIndexList
+                .removeWhere((element) => element["slot"] == index);
+            _selectedAfternoonIndex.remove(index);
+          } else {
+            _selectedAfternoonIndex.add(index);
+            _selectedAfternoonIndexList.add({"slot": index, "isBooked": 1});
+          }
+        });
+        print("afternoon :$_selectedAfternoonIndexList");
+        // if (checkedIndex2 == -1) {
+        //   setState(() {
+        //     checkedIndex2 = index;
+        //   });
+        // } else if (checkedIndex2 == index) {
+        //   setState(() {
+        //     checkedIndex2 = -1;
+        //   });
+        // } else {
+        //   setState(() {
+        //     checkedIndex2 = index;
+        //   });
+        // }
+        print("afternoon: $_selectedAfternoonIndex");
       },
       child: Stack(
         children: <Widget>[
           Card(
-            color: checked ? Colors.orange : Colors.white,
+            color: _selectedAfternoonIndex.contains(index)
+                ? Colors.deepPurple
+                : Colors.white,
             // shape: RoundedRectangleBorder(
             //   borderRadius: BorderRadius.circular(12),
             // ),
             child: Container(
-              child: Center(child: Text("$index")),
+              child: Center(
+                  child: Text("${start + slot}.00 - ${start + 1 + slot}.00 ",
+                      style: TextStyle(
+                          color: _selectedAfternoonIndex.contains(index)
+                              ? Colors.white
+                              : Colors.black))),
             ),
           ),
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Offstage(
-              offstage: !checked,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 2),
-                    shape: BoxShape.circle),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 12,
+          //   right: 12,
+          //   child: Offstage(
+          //     offstage: !checked,
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //           color: Colors.white,
+          //           border: Border.all(width: 2),
+          //           shape: BoxShape.circle),
+          //       child: Icon(
+          //         Icons.check,
+          //         color: Colors.blue,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  Widget buildEveningCard(int index) {
-    bool checked = index == checkedIndex3;
-
+  Widget buildEveningCard(int index, int slot) {
+    int start = 16;
     return GestureDetector(
       onTap: () {
-        if (checkedIndex3 == -1) {
-          setState(() {
-            checkedIndex3 = index;
-          });
-        } else if (checkedIndex3 == index) {
-          setState(() {
-            checkedIndex3 = -1;
-          });
-        } else {
-          setState(() {
-            checkedIndex3 = index;
-          });
-        }
+        setState(() {
+          if (_selectedEveningIndex.contains(index)) {
+            _selectedEveningIndexList
+                .removeWhere((element) => element["slot"] == index);
+            _selectedEveningIndex.remove(index);
+          } else {
+            _selectedEveningIndex.add(index);
+            _selectedEveningIndexList.add({"slot": index, "isBooked": 1});
+          }
+        });
+        print("evening: $_selectedEveningIndexList");
+        // if (checkedIndex3 == -1) {
+        //   setState(() {
+        //     checkedIndex3 = index;
+        //   });
+        // } else if (checkedIndex3 == index) {
+        //   setState(() {
+        //     checkedIndex3 = -1;
+        //   });
+        // } else {
+        //   setState(() {
+        //     checkedIndex3 = index;
+        //   });
+        // }
+        print("evening: $_selectedEveningIndex");
       },
       child: Stack(
         children: <Widget>[
           Card(
-            color: checked ? Colors.orange : Colors.white,
+            color: _selectedEveningIndex.contains(index)
+                ? Colors.deepPurple
+                : Colors.white,
             // shape: RoundedRectangleBorder(
             //   borderRadius: BorderRadius.circular(12),
             // ),
             child: Container(
-              child: Center(child: Text("$index")),
+              child: Center(
+                  child: Text("${start + slot}.00 - ${start + 1 + slot}.00 ",
+                      style: TextStyle(
+                          color: _selectedEveningIndex.contains(index)
+                              ? Colors.white
+                              : Colors.black))),
             ),
           ),
-          Positioned(
-            top: 12,
-            right: 12,
-            child: Offstage(
-              offstage: !checked,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(width: 2),
-                    shape: BoxShape.circle),
-                child: Icon(
-                  Icons.check,
-                  color: Colors.blue,
-                ),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: 12,
+          //   right: 12,
+          //   child: Offstage(
+          //     offstage: !checked,
+          //     child: Container(
+          //       decoration: BoxDecoration(
+          //           color: Colors.white,
+          //           border: Border.all(width: 2),
+          //           shape: BoxShape.circle),
+          //       child: Icon(
+          //         Icons.check,
+          //         color: Colors.blue,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -318,10 +469,16 @@ class _BookingScreenState extends State<BookingScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => DetailScreen(
+              //           widget.name,
+              //           'Heart Surgeon - Flower Hospitals',
+              //           'assets/images/doctor1.png',
+              //           widget._uid)),
+              // );
+              Navigator.pop(context);
             }),
       ),
       backgroundColor: Colors.blue[50],
@@ -364,14 +521,90 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 startingDayOfWeek: StartingDayOfWeek.monday,
                 onDaySelected: (date, events) {
-                  print(date.toUtc());
+                  print(date);
+                  print(date.weekday);
+                  setState(() {
+                    selectedDate = date.toUtc().toString().substring(0, 10);
+                    print(selectedDate);
+                  });
+                  if (date.weekday == 1) {
+                    setState(() {
+                      selectedDay = "Monday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  } else if (date.weekday == 2) {
+                    setState(() {
+                      selectedDay = "Tuesday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  } else if (date.weekday == 3) {
+                    setState(() {
+                      selectedDay = "Wednesday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  } else if (date.weekday == 4) {
+                    setState(() {
+                      selectedDay = "Thursday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  } else if (date.weekday == 5) {
+                    setState(() {
+                      selectedDay = "Friday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  } else if (date.weekday == 6) {
+                    setState(() {
+                      selectedDay = "Saturday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  } else {
+                    setState(() {
+                      selectedDay = "Sunday";
+                      _selectedAfternoonIndexList.clear();
+                      _selectedEveningIndex.clear();
+                      _selectedAfternoonIndex.clear();
+                      _selectedMorningIndex.clear();
+                      _selectedMorningIndexList.clear();
+                      _selectedEveningIndexList.clear();
+                    });
+                  }
                 },
                 builders: CalendarBuilders(
                   selectedDayBuilder: (context, date, events) => Container(
                       margin: const EdgeInsets.all(5.0),
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: Colors.orange,
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Text(
                         date.day.toString(),
@@ -422,21 +655,84 @@ class _BookingScreenState extends State<BookingScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: 6, //data.length,
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio:
-                                    MediaQuery.of(context).size.width /
-                                        (MediaQuery.of(context).size.height *
-                                            0.2 /
-                                            1),
-                                crossAxisCount: 3),
-                        itemBuilder: (BuildContext context, int index) {
-                          return buildMorningCard(index);
+                    StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('freetimeslots')
+                            .document(widget._uid)
+                            .collection(selectedDay)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!(snapshot.hasData)) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SpinKitFadingFour(
+                                  color: Colors.blue,
+                                ),
+                                Spring(
+                                    key: _key3,
+                                    motion: Motion.Mirror,
+                                    animType: AnimType.Bubble,
+                                    animStatus: (status){},
+                                    animDuration: Duration(seconds: 5),
+                                    child: Text("Select a day from calender")),
+                              ],
+                            );
+                          } else {
+                            // print(snapshot.data.documents.runtimeType);
+
+                            List<DocumentSnapshot> docData =
+                                snapshot.data.documents;
+                            // print('gggg');
+                            print(' gg hu ${docData.length}');
+                            // print('gggg');
+
+                            if (docData.length == 0 ||
+                                docData[0]['morning'].length == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SpinKitRotatingCircle(
+                                    color: Colors.blue,
+                                  ),
+                                  Text("No slots Available!!!"),
+                                ],
+                              );
+                            } else {
+                              return GridView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: docData[0]['morning'].length,
+                                  // snapshot
+                                  //     .data.documents.length, //data.length,
+                                  gridDelegate:
+                                      new SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.2 /
+                                                      1),
+                                          crossAxisCount: 3),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    // print(docData[0]['morning'].length);
+                                    // print('vvvvvvvvvvvvvv');
+                                    // print(docData[0]['morning'][index]
+                                    //     .toString());
+                                    // print('vvvvvvvvvvvvvv');
+
+                                    return buildMorningCard(index,
+                                        docData[0]['morning'][index]['slot']);
+                                  });
+                            }
+                          }
                         }),
                     SizedBox(
                       height: 5,
@@ -449,21 +745,76 @@ class _BookingScreenState extends State<BookingScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: 6, //data.length,
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio:
-                                    MediaQuery.of(context).size.width /
-                                        (MediaQuery.of(context).size.height *
-                                            0.2 /
-                                            1),
-                                crossAxisCount: 3),
-                        itemBuilder: (BuildContext context, int index) {
-                          return buildAfternoonCard(index);
+                    StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('freetimeslots')
+                            .document(widget._uid)
+                            .collection(selectedDay)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!(snapshot.hasData)) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SpinKitFadingFour(
+                                  color: Colors.blue,
+                                ),
+                                Spring(
+                                    key: _key2,
+                                    motion: Motion.Mirror,
+                                    animType: AnimType.Bubble,
+                                    animStatus: (status){},
+                                    animDuration: Duration(seconds: 5),
+                                    child: Text("Select a day from calender")),
+                              ],
+                            );
+                          } else {
+                            // print(snapshot.data.documents.runtimeType);
+
+                            List<DocumentSnapshot> docData =
+                                snapshot.data.documents;
+                            // print('gggg');
+                            // print(docData[0]['afternoon'].length);
+                            // print('gggg');
+                            if (docData.length == 0 ||
+                                docData[0]['afternoon'].length == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SpinKitRotatingCircle(
+                                    color: Colors.blue,
+                                  ),
+                                  Text("No slots Available!!!"),
+                                ],
+                              );
+                            } else {
+                              return GridView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: docData[0]['afternoon']
+                                      .length, //data.length,
+                                  gridDelegate:
+                                      new SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.2 /
+                                                      1),
+                                          crossAxisCount: 3),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return buildAfternoonCard(index,
+                                        docData[0]['afternoon'][index]['slot']);
+                                  });
+                            }
+                          }
                         }),
                     SizedBox(
                       height: 5,
@@ -476,21 +827,76 @@ class _BookingScreenState extends State<BookingScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    GridView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: 6, //data.length,
-                        gridDelegate:
-                            new SliverGridDelegateWithFixedCrossAxisCount(
-                                childAspectRatio:
-                                    MediaQuery.of(context).size.width /
-                                        (MediaQuery.of(context).size.height *
-                                            0.2 /
-                                            1),
-                                crossAxisCount: 3),
-                        itemBuilder: (BuildContext context, int index) {
-                          return buildEveningCard(index);
+                    StreamBuilder(
+                        stream: Firestore.instance
+                            .collection('freetimeslots')
+                            .document(widget._uid)
+                            .collection(selectedDay)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!(snapshot.hasData)) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SpinKitFadingFour(
+                                  color: Colors.blue,
+                                ),
+                                Spring(
+                                    key: _key,
+                                    motion: Motion.Mirror,
+                                    animType: AnimType.Bubble,
+                                    animStatus: (status){},
+                                    animDuration: Duration(seconds: 5),
+                                    child: Text("Select a day from calender")),
+                              ],
+                            );
+                          } else {
+                            // print(snapshot.data.documents.runtimeType);
+
+                            List<DocumentSnapshot> docData =
+                                snapshot.data.documents;
+                            // print('gggg');
+                            // print(docData[0]['evening']);
+                            // print('gggg');
+                            if (docData.length == 0 ||
+                                docData[0]['evening'].length == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SpinKitRotatingCircle(
+                                    color: Colors.blue,
+                                  ),
+                                  Text("No slots Available!!!"),
+                                ],
+                              );
+                            } else {
+                              return GridView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: docData[0]['evening']
+                                      .length, //data.length,
+                                  gridDelegate:
+                                      new SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio:
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  (MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.2 /
+                                                      1),
+                                          crossAxisCount: 3),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return buildEveningCard(index,
+                                        docData[0]['evening'][index]['slot']);
+                                  });
+                            }
+                          }
                         }),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.5,
@@ -504,8 +910,62 @@ class _BookingScreenState extends State<BookingScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Colors.blue[800],
-          onPressed: () {
-            showWarningDialog(context);
+          onPressed: () async {
+            if ((_selectedMorningIndexList.length != 0) ||
+                (_selectedAfternoonIndexList.length != 0) ||
+                (_selectedEveningIndexList.length != 0)) {
+              try {
+                
+                Firestore.instance
+                    .collection('bookingslots')
+                    .document((await FirebaseAuth.instance.currentUser())
+                        .uid) // client uid
+                    .collection((await FirebaseAuth.instance.currentUser()).uid)
+                    .document() // client uid
+                    .setData({
+                  'docId': widget._uid,
+                  'docName' :docName,
+                  'speciality': speciality,
+                  'date': selectedDate,
+                  'morning': _selectedMorningIndexList,
+                  'afternoon': _selectedAfternoonIndexList,
+                  'evening': _selectedEveningIndexList
+                });
+                Firestore.instance
+                    .collection('doctorwisebooking')
+                    .document(widget._uid) // doctor uid
+                    .collection('bookinfo')
+                    .document()
+                    .setData({
+                  'docId': widget._uid,
+                  'docName' :docName,
+                  'speciality': speciality,
+                  'patientId': (await FirebaseAuth.instance.currentUser()).uid,
+                  'date': selectedDate,
+                  'morning': _selectedMorningIndexList,
+                  'afternoon': _selectedAfternoonIndexList,
+                  'evening': _selectedEveningIndexList
+                });
+                // print('lllllllllllll');
+                // print(_selectedAfternoonIndexList.length);
+                // print(_selectedMorningIndexList.length);
+                // print(_selectedEveningIndexList.length);
+                // print('lllllllllllll');
+                showWarningDialog(context);
+                setState(() {
+                  _selectedAfternoonIndexList.clear();
+                  _selectedEveningIndex.clear();
+                  _selectedAfternoonIndex.clear();
+                  _selectedMorningIndex.clear();
+                  _selectedMorningIndexList.clear();
+                  _selectedEveningIndexList.clear();
+                });
+              } catch (e) {
+                print(e);
+              }
+            } else {
+              showNoSelectWarningDialog(context);
+            }
           },
           label: Text(
             "Confirm Appointment",
@@ -514,5 +974,23 @@ class _BookingScreenState extends State<BookingScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
     );
+  }
+
+  String docName = "";
+  String speciality = "";
+  Future<void> getDocData(String idno) async {
+    var documentList;
+
+    documentList = await Firestore.instance
+        .collection('doctors')
+        .where("uid", isEqualTo: idno)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = documentList.documents;
+    setState(() {
+      docName = documents.first.data['firstname'] +
+          " " +
+          documents.first.data['lastname'];
+      speciality = documents.first.data['speciality'];
+    });
   }
 }

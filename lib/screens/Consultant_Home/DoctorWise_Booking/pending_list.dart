@@ -4,12 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class UpcomingScreen extends StatefulWidget {
+class PendingList extends StatefulWidget {
+  final String pid;
+  PendingList(this.pid);
   @override
-  _UpcomingScreenState createState() => _UpcomingScreenState();
+  _PendingListState createState() => _PendingListState();
 }
 
-class _UpcomingScreenState extends State<UpcomingScreen> {
+class _PendingListState extends State<PendingList> {
   int checkedIndex3 = -1;
   String updateTimeZone;
   List<dynamic> list;
@@ -79,18 +81,18 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                             Text("$begin.00 - $end.00")
                           ],
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Doctor',
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w900),
-                            ),
-                            Text(name)
-                          ],
-                        )
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     Text(
+                        //       'Doctor',
+                        //       style: TextStyle(
+                        //           color: Colors.grey[600],
+                        //           fontWeight: FontWeight.w900),
+                        //     ),
+                        //     Text(name)
+                        //   ],
+                        // )
                       ],
                     ),
                     SizedBox(
@@ -104,18 +106,18 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Booking For',
-                              style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w900),
-                            ),
-                            Text(type)
-                          ],
-                        ),
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     Text(
+                        //       'Booking For',
+                        //       style: TextStyle(
+                        //           color: Colors.grey[600],
+                        //           fontWeight: FontWeight.w900),
+                        //     ),
+                        //     Text(type)
+                        //   ],
+                        // ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,7 +144,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
                                       child: Text(
-                                    "Pending",
+                                    "Accept",
                                     style: TextStyle(color: Colors.white),
                                   )),
                                 ),
@@ -177,7 +179,7 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Center(
                                         child: Text(
-                                      "Cancel",
+                                      "Reject",
                                       style: TextStyle(color: Colors.white),
                                     )),
                                   ),
@@ -386,8 +388,8 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                               print([arr][0]);
                               Firestore.instance
                                   .collection('bookingslots')
-                                  .document(pid)
-                                  .collection(pid)
+                                  .document(docID)
+                                  .collection(docID)
                                   .document(id)
                                   .get()
                                   .then((DocumentSnapshot ds) {
@@ -400,8 +402,8 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                                 print(timezone);
                                 Firestore.instance
                                     .collection('bookingslots')
-                                    .document(pid)
-                                    .collection(pid)
+                                    .document(docID)
+                                    .collection(docID)
                                     .document(id)
                                     .updateData({
                                   "$timezone": list
@@ -424,8 +426,8 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
                               // print(updateTimeZone);
                               // await Firestore.instance
                               //     .collection('bookingslots')
-                              //     .document(pid)
-                              //     .collection(pid)
+                              //     .document(docID)
+                              //     .collection(docID)
                               //     .document(id)
                               //     .updateData({
                               //   "$timezone": {FieldValue.arrayUnion(list)}
@@ -460,13 +462,14 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
             )));
   }
 
-  String pid;
+  String docID = '';
+  String pid = '';
   String docName = "";
   String speciality = "";
   Future<void> getUser() async {
     FirebaseUser _user = await FirebaseAuth.instance.currentUser();
     setState(() {
-      pid = _user.uid;
+      docID = _user.uid;
     });
   }
 
@@ -489,22 +492,24 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    getUser();
+    getUser().then((value) {
+      print('9999');
+      print(docID);
+      print('9999');
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    double height = size.height;
-    double width = size.width;
     return Scaffold(
       backgroundColor: Colors.blue[100],
       body: StreamBuilder(
         stream: Firestore.instance
             .collection('bookingslots')
-            .document(pid)
-            .collection(pid)
+            .document(widget.pid)
+            .collection(widget.pid)
             .snapshots(),
         builder: (context, snapshot) {
           if ((!(snapshot.hasData)) || snapshot.data.documents.length == 0) {
@@ -512,131 +517,108 @@ class _UpcomingScreenState extends State<UpcomingScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  'assets/images/u3.png',
-                  height: height * 0.3,
-                  filterQuality: FilterQuality.high,
-                ),
                 SpinKitFadingFour(
                   color: Colors.blue,
                 ),
-                Text(
-                  "No appointmnets to show",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text("No appointmnets"),
               ],
             );
           } else {
             List<DocumentSnapshot> bookData = snapshot.data.documents;
             // print(bookData[0]['morning'].length);
-            print("bokkdata length: ${bookData.length}");
-            // print(bookData[1]["docId"]);
-            // for (int i = 0; i < bookData.length; i++) {
-            //   getDocData(bookData[4]["docId"]);
-            //   print('${bookData[4]["docId"]}');
-            //   }
-              // getDocData(bookData[0]["docId"]);
-              // print(bookData[0].documentID);
-              return new ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: bookData.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    // if(bookData[index]['morning'] != null){
-                    return Column(
-                      children: [
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: bookData[index]['morning'].length,
-                            itemBuilder: (BuildContext context1, int index1) {
-                              return bookData[index]['morning'][index1]
-                                          ['isBooked'] !=
-                                      2
-                                  ? buildUpcomingCard(
-                                      index1,
-                                      bookData[index]['date'],
-                                      bookData[index]['morning'][index1]
-                                          ['slot'],
-                                          bookData[index]['docName'] ,
-                                           bookData[index]['speciality'] ,
-                                      // docName,
-                                      // speciality,
-                                      8,
-                                      "am",
-                                      bookData[index].documentID,
-                                      'morning',
-                                      index1)
-                                  : Container();
-                            }),
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: bookData[index]['afternoon'].length,
-                            itemBuilder: (BuildContext context1, int index1) {
-                              return bookData[index]['afternoon'][index1]
-                                          ['isBooked'] !=
-                                      2
-                                  ? buildUpcomingCard(
-                                      index1,
-                                      bookData[index]['date'],
-                                      bookData[index]['afternoon'][index1]
-                                          ['slot'],
-                                      // docName,
-                                       bookData[index]['docName'] ,
-                                        bookData[index]['speciality'] ,
-                                      // speciality,
-                                      12,
-                                      "pm",
-                                      bookData[index].documentID,
-                                      'afternoon',
-                                      index1)
-                                  : Container();
-                            }),
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: bookData[index]['evening'].length,
-                            itemBuilder: (BuildContext context1, int index1) {
-                              return bookData[index]['evening'][index1]
-                                          ['isBooked'] !=
-                                      2
-                                  ? buildUpcomingCard(
-                                      index1,
-                                      bookData[index]['date'],
-                                      bookData[index]['evening'][index1]
-                                          ['slot'],
-                                           bookData[index]['docName'] ,
-                                      // docName,
-                                      // speciality,
-                                       bookData[index]['speciality'] ,
-                                      16,
-                                      "pm",
-                                      bookData[index].documentID,
-                                      "evening",
-                                      index1)
-                                  : Container();
-                            })
-                      ],
-                    );
-                    // bookData[index]['morning'] != null
-                    //     ? buildUpcomingCard(
-                    //         index,
-                    //         bookData[index]['date'],
-                    //         bookData[index]['morning'][index]['slot'],
-                    //         bookData[index]['docId'])
-                    //     :bookData[index]['afternoon'] != null? buildUpcomingCard(
-                    //         index,
-                    //         bookData[index]['date'],
-                    //         bookData[index]['afternoon'][index]['slot'],
-                    //         bookData[index]['docId'])
-                    //         :bookData[index]['evening'] != null?buildUpcomingCard(
-                    //         index,
-                    //         bookData[index]['date'],
-                    //         bookData[index]['evening'][index]['slot'],
-                    //         bookData[index]['docId']):Container();
-                    // }
-                  });
-            
+            getDocData(bookData[0]["docId"]);
+            // print(bookData[0].documentID);
+            return new ListView.builder(
+                shrinkWrap: true,
+                itemCount: bookData.length,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  // if(bookData[index]['morning'] != null){
+                  return Column(
+                    children: [
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bookData[index]['morning'].length,
+                          itemBuilder: (BuildContext context1, int index1) {
+                            return bookData[index]['morning'][index1]
+                                        ['isBooked'] !=
+                                    2
+                                ? buildUpcomingCard(
+                                    index1,
+                                    bookData[index]['date'],
+                                    bookData[index]['morning'][index1]['slot'],
+                                    docName,
+                                    speciality,
+                                    8,
+                                    "am",
+                                    bookData[index].documentID,
+                                    'morning',
+                                    index1)
+                                : Container();
+                          }),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bookData[index]['afternoon'].length,
+                          itemBuilder: (BuildContext context1, int index1) {
+                            return bookData[index]['afternoon'][index1]
+                                        ['isBooked'] !=
+                                    2
+                                ? buildUpcomingCard(
+                                    index1,
+                                    bookData[index]['date'],
+                                    bookData[index]['afternoon'][index1]
+                                        ['slot'],
+                                    docName,
+                                    speciality,
+                                    12,
+                                    "pm",
+                                    bookData[index].documentID,
+                                    'afternoon',
+                                    index1)
+                                : Container();
+                          }),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: bookData[index]['evening'].length,
+                          itemBuilder: (BuildContext context1, int index1) {
+                            return bookData[index]['evening'][index1]
+                                        ['isBooked'] !=
+                                    2
+                                ? buildUpcomingCard(
+                                    index1,
+                                    bookData[index]['date'],
+                                    bookData[index]['evening'][index1]['slot'],
+                                    docName,
+                                    speciality,
+                                    16,
+                                    "pm",
+                                    bookData[index].documentID,
+                                    "evening",
+                                    index1)
+                                : Container();
+                          })
+                    ],
+                  );
+                  // bookData[index]['morning'] != null
+                  //     ? buildUpcomingCard(
+                  //         index,
+                  //         bookData[index]['date'],
+                  //         bookData[index]['morning'][index]['slot'],
+                  //         bookData[index]['docId'])
+                  //     :bookData[index]['afternoon'] != null? buildUpcomingCard(
+                  //         index,
+                  //         bookData[index]['date'],
+                  //         bookData[index]['afternoon'][index]['slot'],
+                  //         bookData[index]['docId'])
+                  //         :bookData[index]['evening'] != null?buildUpcomingCard(
+                  //         index,
+                  //         bookData[index]['date'],
+                  //         bookData[index]['evening'][index]['slot'],
+                  //         bookData[index]['docId']):Container();
+                  // }
+                });
           }
         },
       ),

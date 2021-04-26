@@ -13,12 +13,12 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.3
-  flutter_svg: ^0.19.0
+  flutter_svg: ^0.20.0-nullsafety.3
   google_fonts: ^1.1.0
   bubbled_navigation_bar: ^0.0.4
   bubble_bottom_bar: ^1.2.0
   animations: ^1.1.1
-  simple_animations: ^2.2.1
+  simple_animations: ^1.3.12
   gender_selection: "^0.0.8"
   firebase_auth: ^0.14.0+5
   # firebase_database: ^4.1.1
@@ -29,11 +29,14 @@ dependencies:
   agora_rtc_engine: ^3.0.1-dev.7
   permission_handler: ^3.0.0
   cloud_firestore: ^0.11.0+2
+  timeline_tile: ^0.1.0
+  flutter_spinkit: "^4.1.2"
+  spring: ^1.0.4
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.8.0"
+  flutter_launcher_icons: "^0.9.0"
 
 flutter_icons:
   android: "launcher_icon"

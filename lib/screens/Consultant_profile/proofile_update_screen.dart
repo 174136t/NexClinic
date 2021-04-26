@@ -64,7 +64,7 @@ class _ProfileUpdateScreenState extends State<ProfileUpdateScreen>
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          ConsultantHomeScreen(),
+                                          ConsultantHomeScreen(''),
                                     ),
                                   );
                                 },

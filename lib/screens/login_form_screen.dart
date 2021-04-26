@@ -7,6 +7,8 @@ import 'package:doctor_consultation_app/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
+  final String uid;
+  LoginForm(this.uid);
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -239,7 +241,7 @@ class _LoginFormState extends State<LoginForm> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ConsultantHomeScreen(),
+          builder: (context) => ConsultantHomeScreen(widget.uid),
         ),
       );
     }

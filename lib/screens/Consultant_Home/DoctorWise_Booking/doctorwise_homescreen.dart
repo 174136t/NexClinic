@@ -1,22 +1,16 @@
 import 'package:doctor_consultation_app/constant.dart';
-import 'package:doctor_consultation_app/screens/Doctor_Booking/booking_screen.dart';
-import 'package:doctor_consultation_app/screens/My_appointments/past_screen.dart';
-import 'package:doctor_consultation_app/screens/My_appointments/upcoming_screen.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/patient_list.dart';
 import 'package:flutter/material.dart';
 
-class MyAppointmentsHomeScreen extends StatefulWidget {
-  // var uid;
-  // var name;
-  // MyAppointmentsHomeScreen(this.uid,this.name);
+class DoctorWiseHomeScreen extends StatefulWidget {
   @override
-  _MyAppointmentsHomeScreenState createState() =>
-      _MyAppointmentsHomeScreenState();
+  _DoctorWiseHomeScreenState createState() => _DoctorWiseHomeScreenState();
 }
 
-class _MyAppointmentsHomeScreenState extends State<MyAppointmentsHomeScreen> {
+class _DoctorWiseHomeScreenState extends State<DoctorWiseHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+   return DefaultTabController(
       length: 2,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -35,16 +29,16 @@ class _MyAppointmentsHomeScreenState extends State<MyAppointmentsHomeScreen> {
               tabs: [
                 Tab(
                   // icon: Icon(Icons.card_travel),
-                  text: 'Upcoming',
+                  text: 'Pending',
                 ),
                 Tab(
                   // icon: Icon(Icons.add_shopping_cart),
-                  text: 'Past',
+                  text: 'Accepted',
                 ),
               ],
             ),
             title: Text(
-              'My Appointments',
+              'My Consultations',
               style: TextStyle(color: Colors.white),
             ),
             centerTitle: true,
@@ -65,7 +59,7 @@ class _MyAppointmentsHomeScreenState extends State<MyAppointmentsHomeScreen> {
                 }),
           ),
           body: TabBarView(
-            children: [UpcomingScreen(), PastScreen()],
+            children: [PatientList(), Container()],
           ),
         ),
       ),

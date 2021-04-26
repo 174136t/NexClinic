@@ -1,17 +1,28 @@
+import 'package:doctor_consultation_app/Widgets/form_widget.dart';
 import 'package:doctor_consultation_app/components/schedule_card.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Doctor_Booking/booking_screen.dart';
+import 'package:doctor_consultation_app/screens/Doctors/Categories/all_doc_screen.dart';
+import 'package:doctor_consultation_app/screens/Doctors/doctor_main_screen.dart';
 import 'package:doctor_consultation_app/screens/Patient_Agora/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:spring/spring.dart';
 
-class DetailScreen extends StatelessWidget {
-  var _name;
-  var _description;
-  var _imageUrl;
+class DetailScreen extends StatefulWidget {
+  var name;
+  var description;
+  var imageUrl;
+  var uid;
 
-  DetailScreen(this._name, this._description, this._imageUrl);
+  DetailScreen(this.name, this.description, this.imageUrl, this.uid);
 
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  final _key = GlobalKey<SpringState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +50,11 @@ class DetailScreen extends StatelessWidget {
                   children: <Widget>[
                     InkWell(
                       onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) => DoctorMainScreen()),
+                        // );
                         Navigator.pop(context);
                       },
                       child: SvgPicture.asset(
@@ -54,7 +70,7 @@ class DetailScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.24,
+                height: MediaQuery.of(context).size.height * 0.1,
               ),
               Container(
                 width: double.infinity,
@@ -72,7 +88,7 @@ class DetailScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Image.asset(
-                            _imageUrl,
+                            widget.imageUrl,
                             height: 100,
                           ),
                           SizedBox(
@@ -82,7 +98,7 @@ class DetailScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                _name,
+                                widget.name,
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -93,7 +109,7 @@ class DetailScreen extends StatelessWidget {
                                 height: 10,
                               ),
                               Text(
-                                _description,
+                                widget.description,
                                 style: TextStyle(
                                   color: kTitleTextColor.withOpacity(0.7),
                                 ),
@@ -219,43 +235,51 @@ class DetailScreen extends StatelessWidget {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: redGradient,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            MaterialButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => BookingScreen(),
+                      Spring(
+                        key: _key,
+                        motion: Motion.Mirror,
+                        animType: AnimType.Slide_In_Left,
+                        animDuration: Duration(seconds: 5),
+                        animStatus: (status){},
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: redGradient,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                                bottomLeft: Radius.circular(30),
+                                bottomRight: Radius.circular(30)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              MaterialButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookingScreen(
+                                          widget.uid, widget.name),
+                                    ),
+                                  );
+                                },
+                                // color: Color(0xffFC9535),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'Book an Appointment',
+                                  style: TextStyle(
+                                    color: kWhiteColor,
+                                    fontSize: 18,
                                   ),
-                                );
-                              },
-                              // color: Color(0xffFC9535),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 30,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                'Book an Appointment',
-                                style: TextStyle(
-                                  color: kWhiteColor,
-                                  fontSize: 18,
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],

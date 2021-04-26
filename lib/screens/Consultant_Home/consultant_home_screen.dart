@@ -5,14 +5,20 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Agora/index.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/doctorwise_homescreen.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/time_allocation_home.dart';
+import 'package:doctor_consultation_app/screens/Consultant_profile/edit_screen.dart';
 import 'package:doctor_consultation_app/screens/Consultant_profile/proofile_update_screen.dart';
 import 'package:doctor_consultation_app/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:spring/spring.dart';
 
 class ConsultantHomeScreen extends StatefulWidget {
+  final String uid;
+  ConsultantHomeScreen(this.uid);
   @override
   _ConsultantHomeScreenState createState() => _ConsultantHomeScreenState();
 }
@@ -24,6 +30,9 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   int currentIndex;
+  bool isProfileUpdate = false;
+  final _key = GlobalKey<SpringState>();
+
   @override
   void initState() {
     // ignore: todo
@@ -117,7 +126,7 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
+                      builder: (context) => LoginScreen('', ''),
                     ),
                   );
                 });
@@ -211,6 +220,22 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                       },
                     ),
                   ),
+                  FadeAnimation(
+                    1.4,
+                    ListTile(
+                      leading: Icon(Icons.person, color: Colors.white),
+                      title: Text(
+                        'My Profile',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EditScreen()));
+                      },
+                    ),
+                  ),
                   // ListTile(
                   //   leading: Icon(Icons.history, color: Colors.indigo[400]),
                   //   title: Text('Trip History'),
@@ -255,6 +280,21 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                           _showWarningDialog(context);
                         }),
                   ),
+                  FadeAnimation(
+                    1.4,
+                    ListTile(
+                      leading: Icon(Icons.exit_to_app, color: Colors.white),
+                      title: Text(
+                        'Exit app',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onTap: () {
+                        _onWillPop();
+                        // Navigator.push(context,
+                        //     MaterialPageRoute(builder: (context) => IndexPage()));
+                      },
+                    ),
+                  ),
                 ],
               ),
             )),
@@ -272,271 +312,296 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
             //     ),
             //   ],
             // ),
-            body: SingleChildScrollView(
-              controller: _homeController,
-              child: Container(
-                height: size.height,
-                alignment: Alignment.center,
-                child: Stack(
-                  children: [
-                    // Image.asset(
-                    //   "assets/images/Guest_Screen.png",
-                    //   height: size.height,
-                    //   width: size.width,
-                    //   fit: BoxFit.fill,
-                    // ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+            body: <Widget>[
+              SingleChildScrollView(
+                controller: _homeController,
+                child: FadeAnimation(
+                  1.2,
+                  Container(
+                    height: size.height,
+                    alignment: Alignment.center,
+                    child: Stack(
                       children: [
-                        // SizedBox(
-                        //   height: size.height * 0.01,
+                        // Image.asset(
+                        //   "assets/images/Guest_Screen.png",
+                        //   height: size.height,
+                        //   width: size.width,
+                        //   fit: BoxFit.fill,
                         // ),
-                        Container(
-                          height: size.height * 0.1,
-                          decoration: BoxDecoration(
-                            gradient: purpleGradient,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(30),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    _drawerKey.currentState.openDrawer();
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 16),
-                                    child: SvgPicture.asset(
-                                      'assets/icons/menu.svg',
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            // SizedBox(
+                            //   height: size.height * 0.01,
+                            // ),
+                            Container(
+                              height: size.height * 0.1,
+                              decoration: BoxDecoration(
+                                gradient: purpleGradient,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  bottomRight: Radius.circular(30),
                                 ),
-                                Container(
-                                  margin:
-                                      EdgeInsets.only(right: size.width * 0.55),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 5, top: 20),
-                                  child: Text(
-                                    'Dr.Manoj',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    // AppRoutes.goto(context, MyProfile());
-                                  },
-                                  child: Container(
-                                      margin: EdgeInsets.only(
-                                          right: 5, top: 20, bottom: 2),
-                                      width: size.width * 0.10,
-                                      height: size.width * 0.10,
-                                      decoration: BoxDecoration(
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        _drawerKey.currentState.openDrawer();
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 16),
+                                        child: SvgPicture.asset(
+                                          'assets/icons/menu.svg',
                                           color: Colors.white,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(50))),
-                                      child: Center(
-                                          child: Icon(
-                                        Icons.person,
-                                        color: Colors.blue,
-                                        size: 30,
-                                      ))),
-                                ),
-                                // Image.asset(
-                                //   Assets.avtar,
-                                //   width: 30,
-                                //   height: 30,
-                                //   fit: BoxFit.contain,
-                                // ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.01,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.blue[700],
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          margin: EdgeInsets.symmetric(
-                            horizontal: size.width * 0.08,
-                          ),
-                          child: Container(
-                            width: size.width,
-                            padding: EdgeInsets.all(8),
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.sentiment_very_dissatisfied,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                                Text(
-                                  'Your Profile is not completed yet',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 16,
-                                    color: Colors.lightBlue,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(
-                                  height: size.height * 0.005,
-                                ),
-                                // Text(
-                                //   'give a test to see progress',
-                                //   textAlign: TextAlign.center,
-                                //   style: AppTheme.textStyle.heading1.copyWith(
-                                //       color: Colors.white,
-                                //       fontSize: AppFontSize.s20,
-                                //       fontWeight: FontWeight.w900),
-                                // ),
-                                Text(
-                                  'Update your Profile to begin',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins',
-                                    fontSize: 20,
-                                    color: const Color(0xffffffff),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                SizedBox(
-                                  height: size.height * 0.005,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: size.height * 0.03,
-                        ),
-                        slider(),
-                        SizedBox(
-                          height: size.height * 0.01,
-                        ),
-                        Center(
-                          child: Container(
-                            // height: 200,
-                            width: size.width * 0.95,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Update Your Profile!!!',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 25),
-                                  ),
-                                  SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    'Use the below button or go to your profile tab to finsh your profile update',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color: Colors.grey),
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.05,
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ProfileUpdateScreen(),
                                         ),
-                                      );
-                                    },
-                                    child: Container(
-                                      width: 200,
-                                      decoration: BoxDecoration(
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey,
-                                              offset: Offset(0.0, 1.0), //(x,y)
-                                              blurRadius: 6.0,
-                                            ),
-                                          ],
-                                          gradient: new LinearGradient(
-                                              colors: [
-                                                const Color(0xFF3366FF),
-                                                Colors.deepPurple,
-                                              ],
-                                              begin: const FractionalOffset(
-                                                  0.0, 0.0),
-                                              end: const FractionalOffset(
-                                                  1.0, 0.0),
-                                              stops: [0.0, 1.0],
-                                              tileMode: TileMode.clamp),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20))),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                            child: Text(
-                                          'Update Profile',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 22),
-                                        )),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: size.height * 0.03,
-                                  )
-                                ],
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          right: size.width * 0.55),
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.only(right: 5, top: 20),
+                                      child: Text(
+                                        'Dr.Manoj',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        // AppRoutes.goto(context, MyProfile());
+                                      },
+                                      child: Container(
+                                          margin: EdgeInsets.only(
+                                              right: 5, top: 20, bottom: 2),
+                                          width: size.width * 0.10,
+                                          height: size.width * 0.10,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
+                                                ),
+                                              ],
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(50))),
+                                          child: Center(
+                                              child: Icon(
+                                            Icons.person,
+                                            color: Colors.blue,
+                                            size: 30,
+                                          ))),
+                                    ),
+                                    // Image.asset(
+                                    //   Assets.avtar,
+                                    //   width: 30,
+                                    //   height: 30,
+                                    //   fit: BoxFit.contain,
+                                    // ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        )
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.blue[700],
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: size.width * 0.08,
+                              ),
+                              child: Container(
+                                width: size.width,
+                                padding: EdgeInsets.all(8),
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.sentiment_very_dissatisfied,
+                                      color: Colors.lightBlueAccent,
+                                    ),
+                                    Text(
+                                      'Your Profile is not completed yet',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        color: Colors.lightBlue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.005,
+                                    ),
+                                    // Text(
+                                    //   'give a test to see progress',
+                                    //   textAlign: TextAlign.center,
+                                    //   style: AppTheme.textStyle.heading1.copyWith(
+                                    //       color: Colors.white,
+                                    //       fontSize: AppFontSize.s20,
+                                    //       fontWeight: FontWeight.w900),
+                                    // ),
+                                    Text(
+                                      'Update your Profile to begin',
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 20,
+                                        color: const Color(0xffffffff),
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    SizedBox(
+                                      height: size.height * 0.005,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: size.height * 0.03,
+                            ),
+                            slider(),
+                            SizedBox(
+                              height: size.height * 0.01,
+                            ),
+                            Center(
+                              child: Container(
+                                // height: 200,
+                                width: size.width * 0.95,
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      offset: Offset(0.0, 1.0), //(x,y)
+                                      blurRadius: 6.0,
+                                    ),
+                                  ],
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Update Your Profile!!!',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 25),
+                                      ),
+                                      SizedBox(
+                                        height: 8,
+                                      ),
+                                      Text(
+                                        'Use the below button or go to your profile tab to finsh your profile update',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                            color: Colors.grey),
+                                      ),
+                                      SizedBox(
+                                        height: size.height * 0.05,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileUpdateScreen(),
+                                            ),
+                                          );
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey,
+                                                  offset:
+                                                      Offset(0.0, 1.0), //(x,y)
+                                                  blurRadius: 6.0,
+                                                ),
+                                              ],
+                                              gradient: new LinearGradient(
+                                                  colors: [
+                                                    const Color(0xFF3366FF),
+                                                    Colors.deepPurple,
+                                                  ],
+                                                  begin: const FractionalOffset(
+                                                      0.0, 0.0),
+                                                  end: const FractionalOffset(
+                                                      1.0, 0.0),
+                                                  stops: [0.0, 1.0],
+                                                  tileMode: TileMode.clamp),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                                child: Text(
+                                              'Update Profile',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 22),
+                                            )),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: size.height * 0.03,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {},
-              child: Icon(Icons.add),
-              backgroundColor: Colors.red,
+              TimeAllocationHome(),
+              Container(),
+            ][currentIndex],
+            floatingActionButton: Spring(
+              key: _key,
+              animStatus: (status) {},
+              motion: Motion.Mirror,
+              animType: AnimType.Bubble,
+              animDuration: Duration(seconds: 5),
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DoctorWiseHomeScreen(),
+                    ),
+                  );
+                },
+                child: Icon(Icons.meeting_room),
+                backgroundColor: Colors.red,
+              ),
             ),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
@@ -569,15 +634,15 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                 BubbleBottomBarItem(
                     backgroundColor: Colors.deepPurple,
                     icon: Icon(
-                      Icons.person_pin,
+                      Icons.calendar_today,
                       color: Colors.black,
                     ),
                     activeIcon: Icon(
-                      Icons.person_pin,
+                      Icons.calendar_today,
                       color: Colors.white,
                     ),
                     title: Text(
-                      "Doctors",
+                      "Allocate time",
                       style: TextStyle(color: Colors.white),
                     )),
                 BubbleBottomBarItem(

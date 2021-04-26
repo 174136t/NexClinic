@@ -48,6 +48,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
           'lastname': widget.lastname,
           'email': widget.email,
           'address': widget.address,
+          'uid':user.uid,
           'nic': widget.nic,
           'phone': widget.mobileNumber,
           'speciality': widget.speciality,
@@ -87,6 +88,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
           'lastname': widget.lastname,
           'email': widget.email,
           'address': widget.address,
+          'uid':user.uid,
           'nic': widget.nic,
           'phone': widget.mobileNumber,
           'speciality': widget.speciality,
@@ -209,7 +211,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ConsultantHomeScreen(),
+                                  builder: (context) => ConsultantHomeScreen(''),
                                 ),
                               );
                             },

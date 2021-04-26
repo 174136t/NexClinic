@@ -7,6 +7,7 @@ import 'package:doctor_consultation_app/components/doctor_card.dart';
 import 'package:doctor_consultation_app/components/search_bar.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Doctors/doctor_main_screen.dart';
+import 'package:doctor_consultation_app/screens/My_appointments/myAppintmentsHome_screen.dart';
 import 'package:doctor_consultation_app/screens/Patient_Agora/index.dart';
 import 'package:doctor_consultation_app/screens/login_screen.dart';
 import 'package:doctor_consultation_app/screens/onboarding_screen.dart';
@@ -15,6 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:spring/spring.dart';
 
 import '../constant.dart';
 
@@ -29,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex;
   FirebaseUser user;
   String uid;
+  final _key = GlobalKey<SpringState>();
 
   @override
   void initState() {
@@ -137,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
+                      builder: (context) => LoginScreen("",""),
                     ),
                   );
                 });
@@ -202,6 +205,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 FadeAnimation(
                   1.4,
                   ListTile(
+                    leading: Icon(Icons.meeting_room, color: Colors.white),
+                    title: Text(
+                      'My Appointments',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MyAppointmentsHomeScreen()));
+                    },
+                  ),
+                ),
+                FadeAnimation(
+                  1.4,
+                  ListTile(
                     leading: Icon(Icons.video_call, color: Colors.white),
                     title: Text(
                       'Video Consultation',
@@ -213,16 +233,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-                // ListTile(
-                //   leading: Icon(Icons.history, color: Colors.indigo[400]),
-                //   title: Text('Trip History'),
-                //   onTap: () {
-                //     Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => TripHistory(uid: uid)));
-                //   },
-                // ),
+                FadeAnimation(
+                  1.4,
+                  ListTile(
+                    leading: Icon(Icons.person, color: Colors.white),
+                    title: Text('My Profile',style: TextStyle(color: Colors.white),),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PatientProfile()));
+                    },
+                  ),
+                ),
                 // ListTile(
                 //   leading: Icon(Icons.notifications, color: Colors.indigo[400]),
                 //   title: Text('Notifications'),
@@ -248,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 FadeAnimation(
                   1.4,
                   ListTile(
-                      leading: Icon(Icons.exit_to_app, color: Colors.white),
+                      leading: Icon(Icons.logout, color: Colors.white),
                       title: Text(
                         'Log out',
                         style: TextStyle(color: Colors.white),
@@ -256,6 +279,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       onTap: () {
                         _showWarningDialog(context);
                       }),
+                ),
+                FadeAnimation(
+                  1.4,
+                  ListTile(
+                    leading: Icon(Icons.exit_to_app, color: Colors.white),
+                    title: Text(
+                      'Exit app',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onTap: () {
+                      _onWillPop();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -337,7 +373,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       1.3,
                       Container(
                         decoration: BoxDecoration(
-                          gradient: greenGradient,
+                          // gradient: greenGradient,
+                          color: Colors.white,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(20),
                             bottomRight: Radius.circular(20),
@@ -360,16 +397,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                     'Categories',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: kBackgroundColor,
+                                      color: Colors.black,
                                       fontSize: 18,
                                     ),
                                   ),
-                                  Text(
-                                    'See All',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: lightColor,
-                                      fontSize: 18,
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DoctorMainScreen()));
+                                    },
+                                    child: Text(
+                                      'See All',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: lightColor,
+                                        fontSize: 18,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -444,17 +490,24 @@ class _HomeScreenState extends State<HomeScreen> {
             DoctorMainScreen(),
             IndexPage()
           ][currentIndex],
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PatientProfile(),
-          ),
-        );
-            },
-            child: Icon(Icons.account_circle),
-            backgroundColor: Colors.red,
+          floatingActionButton: Spring(
+            key: _key,
+            animStatus: (status){},
+            motion: Motion.Mirror,
+            animType: AnimType.Bubble,
+            animDuration: Duration(seconds: 5),
+            child: FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyAppointmentsHomeScreen(),
+                  ),
+                );
+              },
+              child: Icon(Icons.meeting_room),
+              backgroundColor: Colors.red,
+            ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           bottomNavigationBar: BubbleBottomBar(
