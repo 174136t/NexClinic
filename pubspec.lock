@@ -166,7 +166,11 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.9.0"
+=======
+    version: "0.8.0"
+>>>>>>> 2d936cad541c7995b95703e939653321eeeb2444
   flutter_spinkit:
     dependency: "direct main"
     description:
@@ -433,7 +437,11 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.2.19"
+=======
+    version: "0.2.19-nullsafety.2"
+>>>>>>> 2d936cad541c7995b95703e939653321eeeb2444
   timeline_tile:
     dependency: "direct main"
     description:
