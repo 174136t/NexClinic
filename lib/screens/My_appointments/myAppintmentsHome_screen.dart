@@ -18,9 +18,7 @@ class _MyAppointmentsHomeScreenState extends State<MyAppointmentsHomeScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+      child:  Scaffold(
           appBar: AppBar(
             flexibleSpace: Container(
               decoration: BoxDecoration(gradient: purpleGradient),
@@ -66,7 +64,7 @@ class _MyAppointmentsHomeScreenState extends State<MyAppointmentsHomeScreen> {
           ),
           body: TabBarView(
             children: [UpcomingScreen(), PastScreen()],
-          ),
+          
         ),
       ),
     );

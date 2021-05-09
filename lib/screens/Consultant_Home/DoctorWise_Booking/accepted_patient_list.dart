@@ -1,18 +1,16 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
-import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/pending_list.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/accepted_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class PatientList extends StatefulWidget {
+class AcceptedPatientList extends StatefulWidget {
   @override
-  _PatientListState createState() => _PatientListState();
+  _AcceptedPatientListState createState() => _AcceptedPatientListState();
 }
 
-class _PatientListState extends State<PatientList> {
+class _AcceptedPatientListState extends State<AcceptedPatientList> {
   bool hasData = true;
   var map = Map();
   var map1 = Map();
@@ -155,7 +153,7 @@ class _PatientListState extends State<PatientList> {
                     ),
                     Text(hasData == true
                         ? 'Loading...'
-                        : 'No pending requests yet!')
+                        : 'No accepted requests yet!')
                   ],
                 )
               : ListView.builder(
@@ -171,7 +169,7 @@ class _PatientListState extends State<PatientList> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  PendingList(list[index], docId),
+                                  AcceptedList(list[index], docId),
                             ),
                           );
                         },

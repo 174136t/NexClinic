@@ -43,6 +43,7 @@ class _BookingScreenState extends State<BookingScreen> {
   void initState() {
     super.initState();
     getDocData(widget._uid);
+    getPatientData();
     _controller = CalendarController();
     _selectedMorningIndexList.length = 0;
     _selectedAfternoonIndexList.length = 0;
@@ -450,6 +451,59 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
+  String pId = "";
+  String pName = "";
+  getPatientData() async {
+   
+   
+    Firestore.instance
+            .collection('users')
+            .document((await FirebaseAuth.instance.currentUser()).uid)
+            .get()
+            .then((value) {
+          setState(() {
+            pId = value.data['uid'].toString();
+            pName = value.data['firstname']+" "+ value.data['lastname'].toString();
+             print('99999999999999999999999999');
+    print(pId);
+    print(pName);
+    print('99999999999999999999999999');
+          });
+        });
+    // for (int i = 0; i < list.length; i++) {
+    // Firestore.instance
+    //     .collection('users')
+    //     .where('uid',
+    //         isEqualTo: (await FirebaseAuth.instance.currentUser()).uid)
+    //     .getDocuments()
+    //     .then((snapshot) {
+    //   print(snapshot.documents);
+    //   // snapshot.documents.map((e) {
+    //   //   if (!map1.containsKey(e.data['firstname'])) {
+    //   //     map1[e.data['firstname']] = 1;
+    //   //   } else {
+    //   //     map1[e.data['firstname']] += 1;
+    //   //   }
+    //   //   // pNameList1.add(e.data["firstname"] + " " + e.data["lastname"]);
+    //   // }).toList();
+    //   // setState(() {
+    //   //   print(map1);
+    //   //   print(pNameList1);
+    //   // });
+    //   setState(() {
+    //     // pNameList = snapshot.documents;
+    //     // print('user $i :${pNameList[0]["firstname"]}');
+
+    //     // print(pNameList1[i]);
+    //     // pNameList1
+    //     //     .add(pNameList[0]["firstname"] + " " + pNameList[0]["lastname"]);
+    //     // print("haha $pNameList1");
+    //   });
+    // });
+    // // }
+    // hasData = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -674,7 +728,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     key: _key3,
                                     motion: Motion.Mirror,
                                     animType: AnimType.Bubble,
-                                    animStatus: (status){},
+                                    animStatus: (status) {},
                                     animDuration: Duration(seconds: 5),
                                     child: Text("Select a day from calender")),
                               ],
@@ -764,7 +818,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     key: _key2,
                                     motion: Motion.Mirror,
                                     animType: AnimType.Bubble,
-                                    animStatus: (status){},
+                                    animStatus: (status) {},
                                     animDuration: Duration(seconds: 5),
                                     child: Text("Select a day from calender")),
                               ],
@@ -846,7 +900,7 @@ class _BookingScreenState extends State<BookingScreen> {
                                     key: _key,
                                     motion: Motion.Mirror,
                                     animType: AnimType.Bubble,
-                                    animStatus: (status){},
+                                    animStatus: (status) {},
                                     animDuration: Duration(seconds: 5),
                                     child: Text("Select a day from calender")),
                               ],
@@ -915,7 +969,6 @@ class _BookingScreenState extends State<BookingScreen> {
                 (_selectedAfternoonIndexList.length != 0) ||
                 (_selectedEveningIndexList.length != 0)) {
               try {
-                
                 Firestore.instance
                     .collection('bookingslots')
                     .document((await FirebaseAuth.instance.currentUser())
@@ -924,7 +977,7 @@ class _BookingScreenState extends State<BookingScreen> {
                     .document() // client uid
                     .setData({
                   'docId': widget._uid,
-                  'docName' :docName,
+                  'docName': docName,
                   'speciality': speciality,
                   'date': selectedDate,
                   'morning': _selectedMorningIndexList,
@@ -938,9 +991,10 @@ class _BookingScreenState extends State<BookingScreen> {
                     .document()
                     .setData({
                   'docId': widget._uid,
-                  'docName' :docName,
+                  'docName': docName,
                   'speciality': speciality,
                   'patientId': (await FirebaseAuth.instance.currentUser()).uid,
+                  'patientName': pName,
                   'date': selectedDate,
                   'morning': _selectedMorningIndexList,
                   'afternoon': _selectedAfternoonIndexList,

@@ -5,6 +5,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Agora/index.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/accepted_patient_list.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/doctorwise_homescreen.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Home/time_allocation_home.dart';
 import 'package:doctor_consultation_app/screens/Consultant_profile/edit_screen.dart';
@@ -15,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:spring/spring.dart';
+import 'package:carousel_pro/carousel_pro.dart';
 
 class ConsultantHomeScreen extends StatefulWidget {
   final String uid;
@@ -216,7 +218,7 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => IndexPage()));
+                                builder: (context) => AcceptedPatientList()));
                       },
                     ),
                   ),
@@ -476,7 +478,31 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                             SizedBox(
                               height: size.height * 0.03,
                             ),
-                            slider(),
+                            // slider(),
+                            Center(
+                              child: Container(
+                                height: size.height * 0.25,
+                                width: size.width * 0.95,
+                                child: Carousel(
+                                  images: [
+                                    NetworkImage(
+                                        'https://image.freepik.com/free-vector/immune-system-concept_52683-40510.jpg'),
+                                    NetworkImage(
+                                        'https://image.freepik.com/free-vector/coronavirus-critical-patient_23-2148534630.jpg'),
+                                    NetworkImage(
+                                        'https://image.freepik.com/free-vector/doctor-vaccinating-patient-illustrated_52683-61519.jpg'),
+                                    NetworkImage(
+                                        'https://image.freepik.com/free-vector/fight-virus-concept_52683-36504.jpg'),
+                                  ],
+                                  borderRadius: true,
+                                  boxFit: BoxFit.fill,
+                                  dotBgColor: Colors.transparent,
+                                  dotPosition: DotPosition.bottomCenter,
+                                  dotColor: Colors.white,
+                                  dotIncreasedColor: Colors.orange,
+                                ),
+                              ),
+                            ),
                             SizedBox(
                               height: size.height * 0.01,
                             ),
@@ -513,7 +539,7 @@ class _ConsultantHomeScreenState extends State<ConsultantHomeScreen> {
                                         'Use the below button or go to your profile tab to finsh your profile update',
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 20,
+                                            fontSize: size.height*0.02,
                                             color: Colors.grey),
                                       ),
                                       SizedBox(

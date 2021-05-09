@@ -147,11 +147,11 @@ class _DetailScreenState extends State<DetailScreen> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => IndexPage()),
-                                      );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //       builder: (context) => IndexPage()),
+                                      // );
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(10),

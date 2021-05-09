@@ -1,20 +1,22 @@
-// import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctor_consultation_app/Aimation/Fade_animation.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/doctorwise_homescreen.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/time_allocation_home.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Agora/index.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class PendingList extends StatefulWidget {
+class AcceptedList extends StatefulWidget {
   final String pid;
   final String docId;
-  PendingList(this.pid, this.docId);
+
+  AcceptedList(this.pid, this.docId);
   @override
-  _PendingListState createState() => _PendingListState();
+  _AcceptedListState createState() => _AcceptedListState();
 }
 
-class _PendingListState extends State<PendingList> {
+class _AcceptedListState extends State<AcceptedList> {
   int checkedIndex3 = -1;
   String updateTimeZone;
   List<dynamic> list;
@@ -127,18 +129,25 @@ class _PendingListState extends State<PendingList> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                showPendingDialog(
-                                    context,
-                                    index,
-                                    date,
-                                    time,
-                                    name,
-                                    type,
-                                    start,
-                                    unit,
-                                    documentId,
-                                    timezone,
-                                    arrIndex);
+                                // showPendingDialog(
+                                //     context,
+                                //     index,
+                                //     date,
+                                //     time,
+                                //     name,
+                                //     type,
+                                //     start,
+                                //     unit,
+                                //     documentId,
+                                //     timezone,
+                                //     arrIndex);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        IndexPage(widget.docId,widget.pid),
+                                  ),
+                                );
                               },
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 0.2,
@@ -160,7 +169,7 @@ class _PendingListState extends State<PendingList> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
                                       child: Text(
-                                    "Accept",
+                                    "start",
                                     style: TextStyle(color: Colors.green[600]),
                                   )),
                                 ),
@@ -168,52 +177,52 @@ class _PendingListState extends State<PendingList> {
                             )
                           ],
                         ),
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  showCancelDialog(
-                                      context,
-                                      index,
-                                      date,
-                                      time,
-                                      name,
-                                      type,
-                                      start,
-                                      unit,
-                                      documentId,
-                                      timezone,
-                                      arrIndex);
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.2,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5)),
-                                    border: Border.all(
-                                        color: Colors.red[600], width: 1.5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        offset: Offset(0.0, 1.0), //(x,y)
-                                        blurRadius: 6.0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                        child: Text(
-                                      "Reject",
-                                      style: TextStyle(color: Colors.red[600]),
-                                    )),
-                                  ),
-                                ),
-                              )
-                            ])
+                        // Column(
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       GestureDetector(
+                        //         onTap: () {
+                        //           showCancelDialog(
+                        //               context,
+                        //               index,
+                        //               date,
+                        //               time,
+                        //               name,
+                        //               type,
+                        //               start,
+                        //               unit,
+                        //               documentId,
+                        //               timezone,
+                        //               arrIndex);
+                        //         },
+                        //         child: Container(
+                        //           width:
+                        //               MediaQuery.of(context).size.width * 0.2,
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.white,
+                        //             borderRadius:
+                        //                 BorderRadius.all(Radius.circular(5)),
+                        //             border: Border.all(
+                        //                 color: Colors.red[600], width: 1.5),
+                        //             boxShadow: [
+                        //               BoxShadow(
+                        //                 color: Colors.grey,
+                        //                 offset: Offset(0.0, 1.0), //(x,y)
+                        //                 blurRadius: 6.0,
+                        //               ),
+                        //             ],
+                        //           ),
+                        //           child: Padding(
+                        //             padding: const EdgeInsets.all(8.0),
+                        //             child: Center(
+                        //                 child: Text(
+                        //               "Reject",
+                        //               style: TextStyle(color: Colors.red[600]),
+                        //             )),
+                        //           ),
+                        //         ),
+                        //       )
+                        //     ])
                       ],
                     ),
                   ],
@@ -253,7 +262,7 @@ class _PendingListState extends State<PendingList> {
                   1.1,
                   Center(
                     child: Text(
-                      'Accept this appointment',
+                      'Start this meeting now?',
                       style: TextStyle(
                           color: Colors.blue[800], fontWeight: FontWeight.bold),
                     ),
@@ -262,7 +271,7 @@ class _PendingListState extends State<PendingList> {
                 content: FadeAnimation(
                   1.2,
                   Text(
-                    'When you approves, patient will get notified.',
+                    'When you starts, the patient will get notified.',
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
                   ),
@@ -317,46 +326,7 @@ class _PendingListState extends State<PendingList> {
                               ],
                             ),
                             onPressed: () {
-                              Firestore.instance
-                                  .collection('bookingslots')
-                                  .document(widget.pid)
-                                  .collection(widget.pid)
-                                  .document(documentId)
-                                  .get()
-                                  .then((DocumentSnapshot ds) {
-                                list = List.from(ds.data['$timezone']);
-                                print(list);
-                                setState(() {
-                                  list[arrIndex]['isBooked'] = 2;
-                                });
-                                // print(ds.data.toString());
-                                // list.removeAt([arr][0]);
-                                // list[]
-                                print('new');
-                                print(list);
-                                print(timezone);
-                                Firestore.instance
-                                    .collection('bookingslots')
-                                    .document(widget.pid)
-                                    .collection(widget.pid)
-                                    .document(documentId)
-                                    .updateData({
-                                  "$timezone": list
-                                  // FieldValue.arrayRemove([arr]
-                                  // )
-                                });
-                              });
-
-                              Firestore.instance
-                                  .collection('videoCode')
-                                  .document(widget.pid)
-                                  .collection('bookinfo')
-                                  .document()
-                                  .setData({
-                                "code": widget.docId+ widget.pid,
-                                "docId": widget.docId,
-                                "pID": widget.pid
-                              });
+                             
                               Navigator.pop(context, true);
                             },
                           ),
@@ -576,6 +546,18 @@ class _PendingListState extends State<PendingList> {
     super.initState();
   }
 
+  // int count = -1;
+  // int count2 = -1;
+  // int count3 = -1;
+  Future<bool> _onwillpop() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TimeAllocationHome(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -614,17 +596,28 @@ class _PendingListState extends State<PendingList> {
                       children: [
                         index == 0
                             ? Text(
-                                'Pending List',
-                              style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.03,),)
+                                'Accepted List',
+                                style: TextStyle(
+                                  fontSize:
+                                      MediaQuery.of(context).size.height * 0.03,
+                                ),
+                              )
                             : Container(),
                         ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: bookData[index]['morning'].length,
                             itemBuilder: (BuildContext context1, int index1) {
+                              // setState(() {
+                              //   bookData[index]['morning'][index1]
+                              //               ['isBooked'] !=
+                              //           2
+                              //       ? count = 0
+                              //       : count = -1;
+                              // });
                               return bookData[index]['morning'][index1]
                                               ['isBooked'] ==
-                                          1 &&
+                                          2 &&
                                       bookData[index]['docId'] == widget.docId
                                   ? buildUpcomingCard(
                                       index1,
@@ -647,9 +640,16 @@ class _PendingListState extends State<PendingList> {
                             shrinkWrap: true,
                             itemCount: bookData[index]['afternoon'].length,
                             itemBuilder: (BuildContext context1, int index1) {
+                              // setState(() {
+                              //   bookData[index]['afternoon'][index1]
+                              //               ['isBooked'] !=
+                              //           2
+                              //       ? count2 = 0
+                              //       : count2 = -1;
+                              // });
                               return bookData[index]['afternoon'][index1]
                                               ['isBooked'] ==
-                                          1 &&
+                                          2 &&
                                       bookData[index]['docId'] == widget.docId
                                   ? buildUpcomingCard(
                                       index1,
@@ -672,9 +672,16 @@ class _PendingListState extends State<PendingList> {
                             shrinkWrap: true,
                             itemCount: bookData[index]['evening'].length,
                             itemBuilder: (BuildContext context1, int index1) {
+                              // setState(() {
+                              //   bookData[index]['evening'][index1]
+                              //               ['isBooked'] !=
+                              //           2
+                              //       ? count3 = 0
+                              //       : count3 = -1;
+                              // });
                               return bookData[index]['evening'][index1]
                                               ['isBooked'] ==
-                                          1 &&
+                                          2 &&
                                       bookData[index]['docId'] == widget.docId
                                   ? buildUpcomingCard(
                                       index1,
@@ -691,7 +698,10 @@ class _PendingListState extends State<PendingList> {
                                       "evening",
                                       index1)
                                   : Container();
-                            })
+                            }),
+                        // count == 0 && count2 == 0 && count3 == 0
+                        //     ? Text('no accepted appointments')
+                        //     : Container()
                       ],
                     );
                     // bookData[index]['morning'] != null

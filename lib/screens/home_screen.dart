@@ -219,20 +219,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ),
-                FadeAnimation(
-                  1.4,
-                  ListTile(
-                    leading: Icon(Icons.video_call, color: Colors.white),
-                    title: Text(
-                      'Video Consultation',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => IndexPage()));
-                    },
-                  ),
-                ),
+                // FadeAnimation(
+                //   1.4,
+                //   ListTile(
+                //     leading: Icon(Icons.video_call, color: Colors.white),
+                //     title: Text(
+                //       'Video Consultation',
+                //       style: TextStyle(color: Colors.white),
+                //     ),
+                //     onTap: () {
+                //       Navigator.push(context,
+                //           MaterialPageRoute(builder: (context) => IndexPage()));
+                //     },
+                //   ),
+                // ),
                 FadeAnimation(
                   1.4,
                   ListTile(
@@ -488,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             DoctorMainScreen(),
-            IndexPage()
+            Container()
           ][currentIndex],
           floatingActionButton: Spring(
             key: _key,

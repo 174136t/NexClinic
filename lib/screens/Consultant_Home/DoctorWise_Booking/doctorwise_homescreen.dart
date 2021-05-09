@@ -1,4 +1,5 @@
 import 'package:doctor_consultation_app/constant.dart';
+import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/accepted_patient_list.dart';
 import 'package:doctor_consultation_app/screens/Consultant_Home/DoctorWise_Booking/patient_list.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +13,9 @@ class _DoctorWiseHomeScreenState extends State<DoctorWiseHomeScreen> {
   Widget build(BuildContext context) {
    return DefaultTabController(
       length: 2,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+      child: 
+       
+        Scaffold(
           appBar: AppBar(
             flexibleSpace: Container(
               decoration: BoxDecoration(gradient: purpleGradient),
@@ -59,10 +60,10 @@ class _DoctorWiseHomeScreenState extends State<DoctorWiseHomeScreen> {
                 }),
           ),
           body: TabBarView(
-            children: [PatientList(), Container()],
+            children: [PatientList(), AcceptedPatientList()],
           ),
         ),
-      ),
+      
     );
   }
 }

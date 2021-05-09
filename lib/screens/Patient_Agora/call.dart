@@ -7,7 +7,6 @@ import 'package:doctor_consultation_app/Widgets/settings.dart';
 import 'package:doctor_consultation_app/constant.dart';
 import 'package:flutter/material.dart';
 
-
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
   final String channelName;
@@ -276,6 +275,7 @@ class _CallPageState extends State<CallPage> {
 
   void _onCallEnd(BuildContext context) {
     Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   void _onToggleMute() {
@@ -293,7 +293,7 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         flexibleSpace: Container(
+        flexibleSpace: Container(
           decoration: BoxDecoration(gradient: purpleGradient),
         ),
         title: Text('Video Room'),
